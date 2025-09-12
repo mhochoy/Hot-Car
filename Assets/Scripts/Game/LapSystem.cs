@@ -6,7 +6,12 @@ public class LapSystem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameSystem.instance.NextLap();
+            other.SendMessage("NextLap");
+        }
+
+        if (other.CompareTag("Bot"))
+        {
+            other.SendMessage("NextLap");
         }
     }
 }

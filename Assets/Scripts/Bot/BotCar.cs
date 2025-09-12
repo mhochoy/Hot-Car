@@ -8,6 +8,7 @@ public class BotCar : MonoBehaviour
     public Movement movement;
     public float Speed;
     public float TurnSpeed;
+    public int CurrentLap = 1;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -22,5 +23,10 @@ public class BotCar : MonoBehaviour
         var rotation = Quaternion.LookRotation(lookPos);
         //transform.localRotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * TurnSpeed);
         movement.Accelerate(Vector3.Angle(rotation.eulerAngles, transform.rotation.eulerAngles), Speed, TurnSpeed);
+    }
+
+    public void NextLap()
+    {
+        CurrentLap++;
     }
 }

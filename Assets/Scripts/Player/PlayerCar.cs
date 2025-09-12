@@ -2,17 +2,23 @@ using UnityEngine;
 
 public class PlayerCar : MonoBehaviour
 {
+    public static PlayerCar instance;
     public float Damage;
     public float Speed;
     public float TurnSpeed;
     public Controls controls;
     public Movement movement;
     public CarSoundbank carSounds;
+    public int CurrentLap = 1;
     Transform car;
     AudioSource sound;
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
         sound = GetComponent<AudioSource>();
         car = transform.GetChild(0);
     }
@@ -97,6 +103,11 @@ public class PlayerCar : MonoBehaviour
         }
 
         sound.Play();
+    }
+
+    public void NextLap()
+    {
+        CurrentLap++;
     }
 
     void PlaySound(AudioClip clip)

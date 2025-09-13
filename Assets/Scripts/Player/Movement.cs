@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
     {
         DamagePotential = (rb.linearVelocity + rb.angularVelocity).magnitude;
 
-        Debug.Log("The current damage potential is: " + DamagePotential);
+        //Debug.Log("The current damage potential is: " + DamagePotential);
     }
 
     public void Accelerate(float horiz, float Speed, float TurnSpeed)

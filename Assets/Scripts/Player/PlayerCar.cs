@@ -78,17 +78,34 @@ public class PlayerCar : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        BotCar botCar = collision.gameObject.GetComponent<BotCar>();
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
         Health health = collision.gameObject.GetComponent<Health>();
 
-        if (rb && collision.transform.tag != "Car")
+        GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
+
+        if (collision.gameObject.layer == 6)
         {
-            rb.AddForce(car.up * Damage, ForceMode.Impulse);
+            sound.PlayOneShot(carSounds.Crash);
         }
 
-        if (health)
+        if (rb)
         {
-            health.Damage(Damage);
+            rb.AddRelativeForce(car.up * Damage * 3, ForceMode.Impulse);
+        }
+        if (botCar)
+        {
+            if (Damage > botCar.Damage)
+            {
+                botCar.health.Damage(Damage);
+            }
+        }
+        else if (!botCar)
+        {
+            if (health)
+            {
+                health.Damage(Damage);
+            }
         }
     }
 

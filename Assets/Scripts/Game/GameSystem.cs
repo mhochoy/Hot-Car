@@ -32,7 +32,7 @@ public class GameSystem : MonoBehaviour
 
         foreach (var bot in bots)
         {
-            botCars.Add(bot.GetComponent<BotCar>());
+            botCars.Add(bot.GetComponentInChildren<BotCar>());
         }
     }
 
@@ -41,13 +41,14 @@ public class GameSystem : MonoBehaviour
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
         IsGameOver = done;
         botCars = botCars.OrderByDescending((bot) => bot.CurrentLap).ToList();
-        BotCar winningBot = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.CurrentLap == Laps);
+        BotCar winningBot = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.CurrentLap > Laps);
+        bool AllBotsAreDead = botCars.All((cars) => cars.isActiveAndEnabled == false);
         bool DidPlayerWin = IsGameOver && ((playerCar && playerCar.CurrentLap > Laps) && (botCars[0] && botCars[0].CurrentLap <= Laps));
         bool DidBotWin = IsGameOver && ((playerCar && playerCar.CurrentLap <= Laps) && (botCars[0] && botCars[0].CurrentLap > Laps));
 
         HandleUI();
 
-        if (playerCar && playerCar.CurrentLap > Laps || botCars[0] && botCars[0].CurrentLap > Laps)
+        if (playerCar && playerCar.CurrentLap > Laps || botCars[0] && botCars[0].CurrentLap > Laps || AllBotsAreDead)
         {
             EndGame();
         }
@@ -66,7 +67,7 @@ public class GameSystem : MonoBehaviour
             Camera.main.transform.position += Camera.main.transform.forward * Time.deltaTime;
             gameUI.DisableLapText();
             gameUI.DisableLeaderText();
-            if (DidPlayerWin)
+            if (DidPlayerWin || AllBotsAreDead)
             {
                 gameUI.SetWinnerText("You won!");
             }

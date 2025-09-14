@@ -1,8 +1,10 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
 public class PlayerCar : MonoBehaviour
 {
     public static PlayerCar instance;
+    public Health health;
     public float Damage;
     public float Speed;
     public float TurnSpeed;
@@ -10,6 +12,7 @@ public class PlayerCar : MonoBehaviour
     public Movement movement;
     public CarSoundbank carSounds;
     public int CurrentLap = 1;
+    public bool IsDead { get; private set; }
     Transform car;
     AudioSource sound;
 
@@ -21,12 +24,14 @@ public class PlayerCar : MonoBehaviour
         }
         sound = GetComponent<AudioSource>();
         car = transform.GetChild(0);
+        health = GetComponent<Health>();
     }
 
     void FixedUpdate()
     {
         Damage = movement.DamagePotential;
         controls.Lock = GameSystem.instance.IsGameOver;
+        IsDead = health.value <= 0;
         if (!controls.accelerate && !controls.brake)
         {
             if (sound.isPlaying && sound.clip != carSounds.Idle)
@@ -76,16 +81,41 @@ public class PlayerCar : MonoBehaviour
         }
     }
 
+    void Death()
+    {
+        GameFX.instance.SpawnExplosion(transform.position);
+        GameFX.instance.SpawnSmokeStreamEffect(transform.position);
+        Camera.main.transform.parent = null;
+        car.gameObject.SetActive(false);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         BotCar botCar = collision.gameObject.GetComponent<BotCar>();
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
-        Health health = collision.gameObject.GetComponent<Health>();
+        Health otherHealth = collision.gameObject.GetComponent<Health>();
 
         GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
 
-        if (collision.gameObject.layer == 6)
+        if (collision.gameObject.layer == 6 || collision.gameObject.CompareTag("Prop"))
         {
+            if (botCar)
+            {
+                if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
+                                                              // the game is over or the countdown is still active
+                {
+                    botCar.health.Damage(Damage);
+                }
+            }
+            else if (!botCar && otherHealth)
+            {
+                otherHealth.Damage(Damage);
+            }
+            else if (!botCar && !otherHealth)
+            {
+                health.Damage(Damage / 2);
+            }
+
             sound.PlayOneShot(carSounds.Crash);
         }
 
@@ -93,21 +123,7 @@ public class PlayerCar : MonoBehaviour
         {
             rb.AddRelativeForce(car.up * Damage * 3, ForceMode.Impulse);
         }
-        if (botCar)
-        {
-            if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
-                // the game is over or the countdown is still active
-            {
-                botCar.health.Damage(Damage);
-            }
-        }
-        else if (!botCar)
-        {
-            if (health)
-            {
-                health.Damage(Damage);
-            }
-        }
+        
     }
 
     // Sounds

@@ -26610,6 +26610,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 189214635300228924, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: m_Name
+      value: Dummy Junk Hunk
+      objectReference: {fileID: 0}
     - target: {fileID: 475012469358317317, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
       propertyPath: m_Name
       value: BotCar

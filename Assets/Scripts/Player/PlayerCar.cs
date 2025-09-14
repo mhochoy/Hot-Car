@@ -70,7 +70,7 @@ public class PlayerCar : Car
 
         else if (!botCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            health.Damage(Damage / 2);
+            health.Damage(Damage / 4);
         }
 
         if (collision.gameObject.CompareTag("Prop"))

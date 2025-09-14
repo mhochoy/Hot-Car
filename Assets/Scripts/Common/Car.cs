@@ -67,7 +67,7 @@ public class Car : MonoBehaviour
 
         else if (!otherCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            health.Damage(Damage / 8);
+            health.Damage(Damage / 4);
         }
 
         if (collision.gameObject.CompareTag("Prop"))

@@ -1,7 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
-[RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(CarSoundbank))]
 public class Car : MonoBehaviour
 {
@@ -12,27 +11,34 @@ public class Car : MonoBehaviour
     public Movement movement;
     public CarSoundbank carSounds;
     public int CurrentLap = 1;
-    public bool IsDead { get; private set; }
+    public bool IsDead { get; protected set; }
+    public float DistanceFromNextWaypoint;
+    protected Vector3 currentVelocity; // Really meant for use with the BotCar
     AudioSource sound;
     float originalPitch;
     Waypoint nextWaypoint;
+    Rigidbody physics;
 
-    void Awake()
+
+    protected virtual void Awake()
     {
         health = GetComponent<Health>();
-        movement = GetComponent<Movement>();
+        movement = GetComponentInParent<Movement>();
         sound = GetComponent<AudioSource>();
+        carSounds = GetComponent<CarSoundbank>();
+        physics = GetComponent<Rigidbody>();
         originalPitch = sound.pitch;
     }
 
     protected virtual void FixedUpdate()
     {
-        Damage = movement.DamagePotential;
         IsDead = health.value <= 0;
+        DistanceFromNextWaypoint = nextWaypoint ? Vector3.Distance(this.transform.position, nextWaypoint.transform.position) : 0.00f;
 
         if (movement.currentLinearVelocity != Vector3.zero)
         {
-            sound.pitch = movement.currentLinearVelocity.y;
+            float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude) ) * .05f, .9f, Mathf.Infinity);
+            sound.pitch = newPitch;
             PlayInterruptingLoopSound(carSounds.AccelerationLoop);
         }
         else
@@ -45,8 +51,26 @@ public class Car : MonoBehaviour
     protected virtual void OnCollisionEnter(Collision collision)
     {
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
+        Car otherCar = collision.gameObject.GetComponent<BotCar>();
+        Health otherHealth = collision.gameObject.GetComponent<Health>();
 
-        if (rb)
+        GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
+
+        if (otherCar && Damage > otherCar.Damage)
+        {
+            otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f);
+        }
+        else if (!otherCar && otherHealth)
+        {
+            otherHealth.Damage(Damage);
+        }
+
+        else if (!otherCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
+        {
+            health.Damage(Damage / 8);
+        }
+
+        if (collision.gameObject.CompareTag("Prop"))
         {
             rb.AddRelativeForce(transform.up * Damage * 3, ForceMode.Impulse);
         }
@@ -64,9 +88,9 @@ public class Car : MonoBehaviour
 
     protected virtual void Death()
     {
+        IsDead = true;
         GameFX.instance.SpawnExplosion(transform.position);
         GameFX.instance.SpawnSmokeStreamEffect(transform.position);
-        Camera.main.transform.parent = null;
         OnDeath();
     }
 
@@ -74,12 +98,12 @@ public class Car : MonoBehaviour
     // Sounds
 
 
-    void PlaySound(AudioClip clip)
+    protected void PlaySound(AudioClip clip)
     {
         sound.PlayOneShot(clip);
     }
 
-    void PlayInterruptingSound(AudioClip clip)
+    protected void PlayInterruptingSound(AudioClip clip)
     {
         if (sound.isPlaying && sound.clip != clip)
         {
@@ -91,7 +115,7 @@ public class Car : MonoBehaviour
         }
     }
 
-    void PlayLoopingSound(AudioClip clip)
+    protected void PlayLoopingSound(AudioClip clip)
     {
         sound.clip = clip;
         if (!sound.loop)
@@ -102,7 +126,7 @@ public class Car : MonoBehaviour
         sound.Play();
     }
 
-    void PlayInterruptingLoopSound(AudioClip clip)
+    protected void PlayInterruptingLoopSound(AudioClip clip)
     {
         if (sound.isPlaying && sound.clip != clip)
         {
@@ -119,5 +143,10 @@ public class Car : MonoBehaviour
     void SetNextWaypoint(Waypoint waypoint)
     {
         nextWaypoint = waypoint;
+    }
+
+    public Waypoint GetNextWaypoint()
+    {
+        return nextWaypoint;
     }
 }

@@ -1,95 +1,53 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
-public class PlayerCar : MonoBehaviour
+public class PlayerCar : Car
 {
     public static PlayerCar instance;
-    public Health health;
-    public float Damage;
-    public float Speed;
-    public float TurnSpeed;
     public Controls controls;
-    public Movement movement;
-    public CarSoundbank carSounds;
-    public int CurrentLap = 1;
-    public bool IsDead { get; private set; }
-    Transform car;
-    AudioSource sound;
 
-    void Awake()
+    protected override void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
-        sound = GetComponent<AudioSource>();
-        car = transform.GetChild(0);
-        health = GetComponent<Health>();
+        base.Awake();
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         Damage = movement.DamagePotential;
         controls.Lock = GameSystem.instance.IsGameOver;
-        IsDead = health.value <= 0;
         if (!controls.accelerate && !controls.brake)
         {
-            if (sound.isPlaying && sound.clip != carSounds.Idle)
-            {
-                sound.Stop();
-            }
-            if (!sound.isPlaying)
-            {
-                PlayLoopingSound(carSounds.Idle);
-            }
+            //base.PlayInterruptingLoopSound(carSounds.Idle);
         }
         if (controls.accelerate)
         {
-            if (sound.isPlaying && sound.clip != carSounds.AccelerationLoop)
-            {
-                sound.Stop();
-            }
-            if (!sound.isPlaying) 
-            {
-                PlayLoopingSound(carSounds.AccelerationLoop);
-            }
+            //base.PlayInterruptingLoopSound(carSounds.AccelerationLoop);
             movement.Accelerate(controls.turn, Speed, TurnSpeed);
         }
         if (controls.deaccelerate)
         {
-            if (sound.isPlaying && sound.clip != carSounds.Deacceleration)
-            {
-                sound.Stop();
-            }
-            if (!sound.isPlaying)
-            {
-                PlaySound(carSounds.Deacceleration);
-            }
+            //base.PlayInterruptingSound(carSounds.Deacceleration);
         }
 
         if (controls.brake)
         {
-            if (sound.isPlaying && sound.clip != carSounds.TireScratch)
-            {
-                sound.Stop();
-            }
-            if (!sound.isPlaying)
-            {
-                PlaySound(carSounds.TireScratch);
-            }
             movement.Reverse(controls.turn, Speed, TurnSpeed);
         }
     }
 
-    void Death()
+    protected override void Death()
     {
-        GameFX.instance.SpawnExplosion(transform.position);
-        GameFX.instance.SpawnSmokeStreamEffect(transform.position);
+        base.Death();
         Camera.main.transform.parent = null;
-        car.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
         BotCar botCar = collision.gameObject.GetComponent<BotCar>();
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
@@ -97,55 +55,28 @@ public class PlayerCar : MonoBehaviour
 
         GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
 
-        if (collision.gameObject.layer == 6 || collision.gameObject.CompareTag("Prop"))
+        if (botCar)
         {
-            if (botCar)
+            if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
+                                                          // the game is over or the countdown is still active
             {
-                if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
-                                                              // the game is over or the countdown is still active
-                {
-                    botCar.health.Damage(Damage);
-                }
+                botCar.health.Damage((Damage - botCar.Damage) * 2.5f);
             }
-            else if (!botCar && otherHealth)
-            {
-                otherHealth.Damage(Damage);
-            }
-            else if (!botCar && !otherHealth)
-            {
-                health.Damage(Damage / 2);
-            }
-
-            sound.PlayOneShot(carSounds.Crash);
+        }
+        else if (!botCar && otherHealth)
+        {
+            otherHealth.Damage(Damage);
         }
 
-        if (rb)
+        else if (!botCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            rb.AddRelativeForce(car.up * Damage * 3, ForceMode.Impulse);
+            health.Damage(Damage / 2);
+        }
+
+        if (collision.gameObject.CompareTag("Prop"))
+        {
+            rb?.AddRelativeForce(transform.right * Damage * 3, ForceMode.Impulse);
         }
         
-    }
-
-    // Sounds
-
-    void PlayLoopingSound(AudioClip clip)
-    {
-        sound.clip = clip;
-        if (!sound.loop)
-        {
-            sound.loop = true;
-        }
-
-        sound.Play();
-    }
-
-    public void NextLap()
-    {
-        CurrentLap++;
-    }
-
-    void PlaySound(AudioClip clip)
-    {
-        sound.PlayOneShot(clip);
     }
 }

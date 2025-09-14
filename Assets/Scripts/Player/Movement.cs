@@ -5,12 +5,14 @@ public class Movement : MonoBehaviour
     [SerializeField] Rigidbody rb;
     public float DamagePotential;
     public Vector3 currentLinearVelocity;
+    public Vector3 currentAngularVelocity;
 
     // Update is called once per frame
     void Update()
     {
         DamagePotential = (rb.linearVelocity + rb.angularVelocity).magnitude;
         currentLinearVelocity = rb.linearVelocity;
+        currentAngularVelocity = rb.angularVelocity;
 
         //Debug.Log("The current damage potential is: " + DamagePotential);
     }

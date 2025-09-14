@@ -6,7 +6,8 @@ public class GameUI : MonoBehaviour
     public TMP_Text LapText;
     public TMP_Text LeaderText;
     public TMP_Text WinnerText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public TMP_Text TimeText;
+
     void Awake()
     {
         WinnerText.gameObject.SetActive(false);
@@ -28,10 +29,11 @@ public class GameUI : MonoBehaviour
         LeaderText.text = text;
     }
 
-    public void SetWinnerText(string text)
+    public void SetWinnerText(string text, float time)
     {
         WinnerText.gameObject.SetActive(true);
         WinnerText.text = text;
+        TimeText.text = $"total time: {time.ToString("0.0")}/s";
     }
 
     public void EnableLapText()

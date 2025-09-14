@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bot
   - Waypoint
+  - Prop
   layers:
   - Default
   - TransparentFX

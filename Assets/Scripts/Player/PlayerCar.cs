@@ -95,7 +95,8 @@ public class PlayerCar : MonoBehaviour
         }
         if (botCar)
         {
-            if (Damage > botCar.Damage)
+            if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
+                // the game is over or the countdown is still active
             {
                 botCar.health.Damage(Damage);
             }

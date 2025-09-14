@@ -1658,7 +1658,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bf7589af3d63c334083d0caf9097bb8c, type: 3}
   m_Resource: {fileID: 8300000, guid: bf7589af3d63c334083d0caf9097bb8c, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.066
+  m_Volume: 0.043
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -9938,18 +9938,6 @@ PrefabInstance:
     - target: {fileID: 4324442506320664980, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
       propertyPath: m_Name
       value: PlayerCar
-      objectReference: {fileID: 0}
-    - target: {fileID: 4719854997407508908, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
-      propertyPath: m_Volume
-      value: 0.09
-      objectReference: {fileID: 0}
-    - target: {fileID: 4719854997407508908, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
-      propertyPath: MaxDistance
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4719854997407508908, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
-      propertyPath: rolloffMode
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8685805266421158894, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
       propertyPath: m_LocalPosition.x

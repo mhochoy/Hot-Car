@@ -1,22 +1,35 @@
 using UnityEngine;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class GameUI : MonoBehaviour
 {
+    public Animator animator;
     public TMP_Text LapText;
     public TMP_Text LeaderText;
     public TMP_Text WinnerText;
     public TMP_Text TimeText;
+    [SerializeField] List<AudioClip> TimeSounds = new List<AudioClip>();
+    [SerializeField] AudioClip LapSound;
+    AnimatorStateInfo animatorStateInfo;
+    [SerializeField] AudioSource sound;
 
     void Awake()
     {
+        animator = GetComponent<Animator>();
         WinnerText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+    }
+
+    public bool IsInCountdown()
+    {
+        return animatorStateInfo.IsName("Countdown");
     }
 
     public void SetLapText(string text)
@@ -54,5 +67,21 @@ public class GameUI : MonoBehaviour
     public void DisableLeaderText()
     {
         LeaderText.gameObject.SetActive(false);
+    }
+
+
+    public void PlayTimeTick()
+    {
+        sound.PlayOneShot(TimeSounds[0]);
+    }
+
+    public void PlayTimeTock()
+    {
+        sound.PlayOneShot(TimeSounds[1]);
+    }
+
+    public void TickLapNoise()
+    {
+        sound.PlayOneShot(LapSound);
     }
 }

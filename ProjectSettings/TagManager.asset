@@ -7,6 +7,7 @@ TagManager:
   - Bot
   - Waypoint
   - Prop
+  - Trap/Oil
   layers:
   - Default
   - TransparentFX

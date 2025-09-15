@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSystem : MonoBehaviour
 {
@@ -53,6 +54,8 @@ public class GameSystem : MonoBehaviour
         bool DidBotWin = (BotBeatTheFinalLapBeforeThePlayer || (playerCar.IsDead && OneBotIsLeft));
         bool done = false;
 
+        HandleCountdownLock();
+
         if ((DidPlayerWin || DidBotWin) && !done)
         {
             if (DidBotWin) // We don't want this to run every frame as it is a relatively expensive operation
@@ -72,6 +75,7 @@ public class GameSystem : MonoBehaviour
             {
                 Winner = playerCar;
             }
+            playerCar.controls.Lock = true;
             EndGame();
 
             done = true; // We do this so we only run this 'if' once
@@ -83,6 +87,26 @@ public class GameSystem : MonoBehaviour
 
         HandleUI();
         HandleGameExtras();
+    }
+
+    void HandleCountdownLock()
+    {
+        if (gameUI.IsInCountdown())
+        {
+            playerCar.controls.Lock = true;
+            foreach (var car in botCars)
+            {
+                car.Stop = true;
+            }
+        }
+        else
+        {
+            playerCar.controls.Lock = false;
+            foreach (var car in botCars)
+            {
+                car.Stop = false;
+            }
+        }
     }
 
     void HandleGameExtras()
@@ -195,15 +219,17 @@ public class GameSystem : MonoBehaviour
     IEnumerator<WaitForSeconds> End()
     {
         yield return new WaitForSeconds(3);
-#if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-#else
-        Application.Quit();
-#endif
+        Time.timeScale = originalTimeScale;
+        SceneManager.LoadScene("MainMenu");
     }
 
     void EndGame()
     {
         state = GameState.Completed;
+    }
+
+    void TickLapNoise()
+    {
+        gameUI.TickLapNoise();
     }
 }

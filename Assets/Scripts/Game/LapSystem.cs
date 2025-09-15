@@ -7,6 +7,7 @@ public class LapSystem : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.SendMessage("NextLap");
+            GameSystem.instance.SendMessage("TickLapNoise");
         }
 
         if (other.CompareTag("Bot"))

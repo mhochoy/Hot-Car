@@ -19,7 +19,10 @@ public class PlayerCar : Car
     {
         base.FixedUpdate();
         Damage = movement.DamagePotential;
-        controls.Lock = GameSystem.instance.IsGameOver;
+        if (controls.Lock)
+        {
+            return;
+        }
         if (!controls.accelerate && !controls.brake)
         {
             //base.PlayInterruptingLoopSound(carSounds.Idle);

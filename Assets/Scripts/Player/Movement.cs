@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour
     public float DamagePotential;
     public Vector3 currentLinearVelocity;
     public Vector3 currentAngularVelocity;
+    public float turningInfluence;
 
     // Update is called once per frame
     void Update()
@@ -24,7 +25,7 @@ public class Movement : MonoBehaviour
         rb.AddRelativeForce(engineForce, ForceMode.Acceleration);
 
         // Apply Steering
-        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f);
+        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f) + turningInfluence;
         rb.angularVelocity = new Vector3(0, turn, 0);
     }
 
@@ -33,7 +34,7 @@ public class Movement : MonoBehaviour
         Vector2 engineForce = (-transform.up * Speed) / 2;
         rb.AddRelativeForce(engineForce, ForceMode.Acceleration);
 
-        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f);
+        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f) + turningInfluence;
         rb.angularVelocity = new Vector3(0, -turn, 0);
     }
 }

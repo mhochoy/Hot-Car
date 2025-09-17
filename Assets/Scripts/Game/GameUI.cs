@@ -10,6 +10,7 @@ public class GameUI : MonoBehaviour
     public TMP_Text LeaderText;
     public TMP_Text WinnerText;
     public TMP_Text TimeText;
+    public TMP_Text HealthText;
     [SerializeField] List<AudioClip> TimeSounds = new List<AudioClip>();
     [SerializeField] AudioClip LapSound;
     AnimatorStateInfo animatorStateInfo;
@@ -18,6 +19,7 @@ public class GameUI : MonoBehaviour
     void Awake()
     {
         animator = GetComponent<Animator>();
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         WinnerText.gameObject.SetActive(false);
     }
 
@@ -49,6 +51,11 @@ public class GameUI : MonoBehaviour
         TimeText.text = $"total time: {time.ToString("0.0")}/s";
     }
 
+    public void SetHealthText(float value)
+    {
+        HealthText.text = $"Health: {value.ToString("0.00")}";
+    }
+
     public void EnableLapText()
     {
         LapText.gameObject.SetActive(true);
@@ -57,6 +64,11 @@ public class GameUI : MonoBehaviour
     public void EnableLeaderText()
     {
         LeaderText.gameObject.SetActive(true);
+    }
+
+    public void EnableHealthText()
+    {
+        HealthText.gameObject.SetActive(true);
     }
 
     public void DisableLapText()
@@ -69,6 +81,10 @@ public class GameUI : MonoBehaviour
         LeaderText.gameObject.SetActive(false);
     }
 
+    public void DisableHealthText()
+    {
+        HealthText.gameObject.SetActive(false);
+    }
 
     public void PlayTimeTick()
     {

@@ -44,7 +44,7 @@ public class GameSystem : MonoBehaviour
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
         IsGameOver = (state == GameState.Completed);
-        botCars = botCars.OrderByDescending((bot) => bot.CurrentLap).ToList();
+        botCars = botCars.OrderByDescending((car) => car.CurrentLap).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.DistanceFromNextWaypoint).ToList();
         List<BotCar> aliveBots = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == false).ToList();
         bool AllBotsAreDead = botCars.All((cars) => cars.isActiveAndEnabled == false);
         bool OneBotIsLeft = (aliveBots.Count <= 1);
@@ -133,6 +133,7 @@ public class GameSystem : MonoBehaviour
 
     void HandleUI()
     {
+        gameUI.SetHealthText(playerCar.health.value);
         gameUI.SetLapText($"Lap: {playerCar.CurrentLap}/{Laps}");
         gameUI.SetLeaderText($"{(Leader ? Leader.name : "Nobody")} is leading!");
     }
@@ -145,7 +146,7 @@ public class GameSystem : MonoBehaviour
         Waypoint leadingBotNextWaypoint = botCars[0].GetNextWaypoint();
         bool PlayerOverlappingBot = playerCar.CurrentLap > botCars[0].CurrentLap;
         bool BotOverlappingPlayer = playerCar.CurrentLap < botCars[0].CurrentLap;
-        bool PlayerAndBotAreEven = playerCar.CurrentLap == botCars[0].CurrentLap;
+        bool PlayerAndBotAreOnSameLap = playerCar.CurrentLap == botCars[0].CurrentLap;
         bool OneOverlappingAnother = (PlayerOverlappingBot || BotOverlappingPlayer);
 
         if ((playerNextWaypoint && leadingBotNextWaypoint)) // Ensure that these are not null before working with them
@@ -158,12 +159,13 @@ public class GameSystem : MonoBehaviour
             {
                 Leader = botCars[0];
             }
-            if (PlayerAndBotAreEven && !OneOverlappingAnother)
+            if (PlayerAndBotAreOnSameLap && !OneOverlappingAnother)
             {
                 bool PlayerOnFartherCheckpointThanBot = playerNextWaypoint.level > leadingBotNextWaypoint.level;
                 bool BotOnFartherCheckpointThanPlayer = playerNextWaypoint.level < leadingBotNextWaypoint.level;
                 bool PlayerAndBotOnSameCheckpoint = playerNextWaypoint.level == leadingBotNextWaypoint.level;
                 bool OneFartherThanAnother = (PlayerOnFartherCheckpointThanBot || BotOnFartherCheckpointThanPlayer);
+
                 if (OneOverlappingAnother)
                 {
                     return;
@@ -180,6 +182,7 @@ public class GameSystem : MonoBehaviour
                 {
                     bool PlayerClosestToNextCheckpoint = playerCar.DistanceFromNextWaypoint < botCars[0].DistanceFromNextWaypoint;
                     bool BotClosestToNextCheckpoint = playerCar.DistanceFromNextWaypoint > botCars[0].DistanceFromNextWaypoint;
+                    
                     if (OneFartherThanAnother)
                     {
                         return;
@@ -212,7 +215,11 @@ public class GameSystem : MonoBehaviour
             {
                 continue;
             }
-            botCars.Add(bot.GetComponentInChildren<BotCar>());
+            else
+            {
+                botCars.Add(bot.GetComponent<BotCar>());
+            }
+                
         }
     }
 

@@ -58,21 +58,21 @@ public class Car : MonoBehaviour
 
         if (otherCar && Damage > otherCar.Damage)
         {
-            otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f);
+            otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f); // This is the collision with another car
         }
         else if (!otherCar && otherHealth)
         {
-            otherHealth.Damage(Damage);
+            otherHealth.Damage(Damage); // This is the collision with a prop or some other GameObject with a health script
         }
 
         else if (!otherCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            health.Damage(Damage / 4);
+            health.Damage(Damage / 4); // This is the collision with the wall
         }
 
         if (collision.gameObject.CompareTag("Prop"))
         {
-            rb.AddRelativeForce(transform.up * Damage * 3, ForceMode.Impulse);
+            rb.AddRelativeForce(transform.up * Damage * 3, ForceMode.Impulse); // Knocks around GameObjects with physics on them
         }
     }
 

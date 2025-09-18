@@ -2,17 +2,26 @@ using UnityEngine;
 
 public class LapSystem : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    Waypoint waypoint;
+    private void Awake()
     {
-        if (other.CompareTag("Player"))
+        waypoint = GetComponent<Waypoint>();
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == 6)
         {
-            other.SendMessage("NextLap");
-            GameSystem.instance.SendMessage("TickLapNoise");
-        }
+            Car car = other.GetComponent<Car>();
 
-        if (other.CompareTag("Bot"))
-        {
-            other.SendMessage("NextLap");
+            if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.MaxCheckpointLevels)
+            {
+                other.SendMessage("NextLap");
+                other.SendMessage("ClearCompletedWaypoints");
+                if (car is PlayerCar)
+                {
+                    GameSystem.instance.SendMessage("TickLapNoise");
+                }
+            }
         }
     }
 }

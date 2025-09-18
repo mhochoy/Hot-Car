@@ -20,9 +20,11 @@ public class Boost : MonoBehaviour
         {
             mesh.enabled = false;
             capsuleCollider.enabled = false;
-            timer -= Time.deltaTime;
-
-            if (timer <= 0.00f)
+            if (timer > 0.00f)
+            {
+                timer -= Time.deltaTime;
+            }
+            else
             {
                 gameObject.SetActive(false);
             }

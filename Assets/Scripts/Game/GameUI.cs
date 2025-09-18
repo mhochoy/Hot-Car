@@ -11,6 +11,9 @@ public class GameUI : MonoBehaviour
     public TMP_Text WinnerText;
     public TMP_Text TimeText;
     public TMP_Text HealthText;
+    public TMP_Text CurrentDamagePotentialText;
+    public TMP_Text CurrentBoostText;
+    public TMP_Text CurrentCarCountText;
     [SerializeField] List<AudioClip> TimeSounds = new List<AudioClip>();
     [SerializeField] AudioClip LapSound;
     AnimatorStateInfo animatorStateInfo;
@@ -56,6 +59,23 @@ public class GameUI : MonoBehaviour
         HealthText.text = $"Health: {value.ToString("0.00")}";
     }
 
+    public void SetDamagePotentialText(float value)
+    {
+        CurrentDamagePotentialText.text = $"Damage Potential: {value.ToString("0.00")}";
+    }
+
+    public void SetBoostText(Boost boost)
+    {
+        string boostType = boost && boost is DamageBoost ? "Damage" : boost && boost is SpeedBoost ? "Speed" : "None";
+
+        CurrentBoostText.text = $"Current Boost: {boostType} - {boost?.timer}";
+    }
+
+    public void SetCourseInformationText(int alive, int total)
+    {
+        CurrentCarCountText.text = $"Cars: {alive} Alive / {total} Total / {total - alive} Destroyed";
+    }
+
     public void EnableLapText()
     {
         LapText.gameObject.SetActive(true);
@@ -71,6 +91,21 @@ public class GameUI : MonoBehaviour
         HealthText.gameObject.SetActive(true);
     }
 
+    public void EnableDamagePotentialText()
+    {
+        CurrentDamagePotentialText.gameObject.SetActive(true); 
+    }
+
+    public void EnableCurrentBoostText()
+    {
+        CurrentBoostText.gameObject.SetActive(true);
+    }
+
+    public void EnableCourseInformationText()
+    {
+        CurrentCarCountText.gameObject.SetActive(true);
+    }
+
     public void DisableLapText()
     {
         LapText.gameObject.SetActive(false);
@@ -84,6 +119,21 @@ public class GameUI : MonoBehaviour
     public void DisableHealthText()
     {
         HealthText.gameObject.SetActive(false);
+    }
+
+    public void DisableDamagePotentialText()
+    {
+        CurrentDamagePotentialText.gameObject.SetActive(false);
+    }
+
+    public void DisableCurrentBoostText()
+    {
+        CurrentBoostText.gameObject.SetActive(false);
+    }
+
+    public void DisableCourseInformationText()
+    {
+        CurrentCarCountText.gameObject.SetActive(false);
     }
 
     public void PlayTimeTick()

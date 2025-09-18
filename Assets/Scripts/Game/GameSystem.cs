@@ -20,11 +20,13 @@ public class GameSystem : MonoBehaviour
     public float TotalTime;
     public bool IsGameOver { get; private set; }
     public Car Leader;
+    public int MaxCheckpointLevels;
     Car Winner;
     GameUI gameUI;
     float originalTimeScale;
     PlayerCar playerCar;
     List<BotCar> botCars = new List<BotCar>();
+    List<Waypoint> allWaypoints = new List<Waypoint>();
 
     void Awake()
     {
@@ -36,6 +38,13 @@ public class GameSystem : MonoBehaviour
         gameUI = GetComponent<GameUI>();
         originalTimeScale = Time.timeScale;
         state = GameState.InProgress;
+        foreach (var waypoint in GameObject.FindGameObjectsWithTag("Waypoint"))
+        {
+            allWaypoints.Add(waypoint.GetComponent<Waypoint>());
+        }
+
+        allWaypoints = allWaypoints.OrderByDescending((waypoint) => waypoint.level).ToList();
+        MaxCheckpointLevels = allWaypoints.Count;
 
         GatherBots();
     }
@@ -123,8 +132,7 @@ public class GameSystem : MonoBehaviour
         {
             Time.timeScale = .25f;
             Camera.main.transform.position += Camera.main.transform.forward * Time.deltaTime;
-            gameUI.DisableLapText();
-            gameUI.DisableLeaderText();
+            HideRaceUIElements();
             gameUI.SetWinnerText($"{Winner.name} won!", TotalTime);
 
             StartCoroutine(End());
@@ -133,9 +141,37 @@ public class GameSystem : MonoBehaviour
 
     void HandleUI()
     {
+        // Player
         gameUI.SetHealthText(playerCar.health.value);
+        gameUI.SetDamagePotentialText(playerCar.Damage * ((playerCar.CurrentBoost && playerCar.CurrentBoost) ? playerCar.CurrentBoost.value : 1f));
+        gameUI.SetBoostText(playerCar.CurrentBoost);
+
+        // General
         gameUI.SetLapText($"Lap: {playerCar.CurrentLap}/{Laps}");
         gameUI.SetLeaderText($"{(Leader ? Leader.name : "Nobody")} is leading!");
+        gameUI.SetCourseInformationText(botCars.FindAll((car) => !car.IsDead).Count + (!playerCar.IsDead ? 1 : 0), botCars.Count + 1);
+    }
+
+    void ShowRaceUIElements()
+    {
+        gameUI.EnableHealthText();
+        gameUI.EnableDamagePotentialText();
+        gameUI.EnableCurrentBoostText();
+
+        gameUI.EnableLapText();
+        gameUI.EnableLeaderText();
+        gameUI.EnableCourseInformationText();
+    }
+
+    void HideRaceUIElements()
+    {
+        gameUI.DisableHealthText();
+        gameUI.DisableDamagePotentialText();
+        gameUI.DisableCurrentBoostText();
+
+        gameUI.DisableLapText();
+        gameUI.DisableLeaderText();
+        gameUI.DisableCourseInformationText();
     }
 
     void DetermineLeader()

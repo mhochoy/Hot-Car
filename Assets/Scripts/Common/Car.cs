@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CarSoundbank))]
 public class Car : MonoBehaviour
@@ -17,6 +18,7 @@ public class Car : MonoBehaviour
     protected Vector3 currentVelocity; // Really meant for use with the BotCar
     AudioSource sound;
     float originalPitch;
+    List<Waypoint> completedWaypoints = new List<Waypoint>();
     Waypoint nextWaypoint;
 
 
@@ -109,6 +111,11 @@ public class Car : MonoBehaviour
         CurrentLap++;
     }
 
+    public int GetCompletedWaypoints()
+    {
+        return completedWaypoints.Count;
+    }
+
     protected virtual void OnDeath()
     {
 
@@ -167,6 +174,20 @@ public class Car : MonoBehaviour
     }
 
     // Message Events
+
+    void AddCompletedWaypoints(Waypoint waypoint)
+    {
+        if (completedWaypoints.Contains(waypoint))
+        {
+            return;
+        } 
+        completedWaypoints.Add(waypoint);
+    }
+
+    void ClearCompletedWaypoints()
+    {
+        completedWaypoints.Clear();
+    }
 
     void SetNextWaypoint(Waypoint waypoint)
     {

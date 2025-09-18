@@ -7,16 +7,30 @@ public class Waypoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 6)
+        Car car = other.GetComponent<Car>();
+
+        if (car)
         {
-            other.gameObject.SendMessage("SetNextWaypoint", next);
-        }
-        if (other.CompareTag("Bot"))
-        {
-            BotCar car = other.GetComponent<BotCar>();
-            if (car)
+            if (car is PlayerCar)
             {
-                car.Go(next.transform.position);
+                Debug.Log($"Player has completed {car.GetCompletedWaypoints() + 1} checkpoints");
+                Debug.Log($"Player needs {GameSystem.instance.MaxCheckpointLevels} to get to next lap");
+                if (gameObject.name == "LapTrigger")
+                {
+                    return;
+                }
+            }
+
+            car.gameObject.SendMessage("AddCompletedWaypoints", this);
+            car.gameObject.SendMessage("SetNextWaypoint", next);
+
+            if (car is BotCar)
+            {
+                BotCar bot = (BotCar)car;
+                if (bot)
+                {
+                    bot.Go(next.transform.position);
+                }
             }
         }
     }

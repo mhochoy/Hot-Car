@@ -13,11 +13,11 @@ public class Car : MonoBehaviour
     public int CurrentLap = 1;
     public bool IsDead { get; protected set; }
     public float DistanceFromNextWaypoint;
+    public Boost CurrentBoost;
     protected Vector3 currentVelocity; // Really meant for use with the BotCar
     AudioSource sound;
     float originalPitch;
     Waypoint nextWaypoint;
-    Rigidbody physics;
 
 
     protected virtual void Awake()
@@ -26,7 +26,6 @@ public class Car : MonoBehaviour
         movement = GetComponentInParent<Movement>();
         sound = GetComponent<AudioSource>();
         carSounds = GetComponent<CarSoundbank>();
-        physics = GetComponent<Rigidbody>();
         originalPitch = sound.pitch;
     }
 
@@ -35,9 +34,14 @@ public class Car : MonoBehaviour
         IsDead = health.value <= 0;
         DistanceFromNextWaypoint = nextWaypoint ? Vector3.Distance(this.transform.position, nextWaypoint.transform.position) : 0.00f;
 
+        if (CurrentBoost && !CurrentBoost.isActiveAndEnabled)
+        {
+            CurrentBoost = null;
+        }
+
         if (movement.currentLinearVelocity != Vector3.zero)
         {
-            float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude) ) * .05f, .9f, Mathf.Infinity);
+            float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude)) * .05f, .9f, Mathf.Infinity);
             sound.pitch = newPitch;
             PlayInterruptingLoopSound(carSounds.AccelerationLoop);
         }
@@ -73,6 +77,30 @@ public class Car : MonoBehaviour
         if (collision.gameObject.CompareTag("Prop"))
         {
             rb.AddRelativeForce(transform.up * Damage * 3, ForceMode.Impulse); // Knocks around GameObjects with physics on them
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Contains("Boost") && this is PlayerCar)
+        {
+            Boost boost = other.gameObject.GetComponent<Boost>();
+
+            GiveBoost(boost);
+        }
+    }
+
+    public void GiveBoost(Boost boost)
+    {
+        if (boost is HealthBoost)
+        {
+            health.Give(boost.value);
+            this.CurrentBoost.Activate();
+        }
+        else
+        {
+            this.CurrentBoost = boost;
+            this.CurrentBoost.Activate();
         }
     }
 

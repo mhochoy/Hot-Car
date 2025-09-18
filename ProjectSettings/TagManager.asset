@@ -8,6 +8,9 @@ TagManager:
   - Waypoint
   - Prop
   - Trap/Oil
+  - Boost/Damage
+  - Boost/Health
+  - Boost/Speed
   layers:
   - Default
   - TransparentFX

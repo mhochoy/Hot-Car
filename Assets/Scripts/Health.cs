@@ -12,6 +12,18 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void Give(float amount)
+    {
+        if (value + amount > 100.00f)
+        {
+            return;
+        }
+        else
+        {
+            value += amount;
+        }
+    }
+
     public void Damage(float damage)
     {
         float remainingHealth = value - damage;

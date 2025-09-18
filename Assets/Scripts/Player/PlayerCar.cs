@@ -17,8 +17,8 @@ public class PlayerCar : Car
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
         Damage = movement.DamagePotential;
+        base.FixedUpdate();
         if (controls.Lock)
         {
             return;
@@ -30,7 +30,7 @@ public class PlayerCar : Car
         if (controls.accelerate)
         {
             //base.PlayInterruptingLoopSound(carSounds.AccelerationLoop);
-            movement.Accelerate(controls.turn, Speed, TurnSpeed);
+            movement.Accelerate(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);
         }
         if (controls.deaccelerate)
         {
@@ -39,7 +39,7 @@ public class PlayerCar : Car
 
         if (controls.brake)
         {
-            movement.Reverse(controls.turn, Speed, TurnSpeed);
+            movement.Reverse(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);
         }
     }
 
@@ -63,22 +63,22 @@ public class PlayerCar : Car
             if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
                                                           // the game is over or the countdown is still active
             {
-                botCar.health.Damage((Damage - botCar.Damage) * 2.5f);
+                botCar.health.Damage((Damage - botCar.Damage) * 2.5f * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
             }
         }
         else if (!botCar && otherHealth)
         {
-            otherHealth.Damage(Damage);
+            otherHealth.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
         }
 
         else if (!botCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            health.Damage(Damage / 4);
+            health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 4);
         }
 
         if (collision.gameObject.CompareTag("Prop"))
         {
-            rb?.AddRelativeForce(transform.right * Damage * 3, ForceMode.Impulse);
+            rb?.AddRelativeForce(transform.right * Damage * 3 * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f), ForceMode.Impulse);
         }
         
     }

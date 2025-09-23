@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -15,12 +16,20 @@ public class GameSystem : MonoBehaviour
         Countdown
     }
     GameState state;
+    [Header("Components")]
+    [ReadOnly(true)]
     public static GameSystem instance;
-    public int Laps;
-    public float TotalTime;
+
+    [Header("Race Properties")]
     public bool IsGameOver { get; private set; }
     public Car Leader;
-    public int MaxCheckpointLevels;
+    [Tooltip("The maximum amount of laps in this race.")]
+    public int Laps;
+    [Tooltip("The amount of time passed since the beginning of the race.")]
+    public float TotalTime;
+
+    // Private
+    int MaxCheckpointLevels;
     Car Winner;
     GameUI gameUI;
     float originalTimeScale;
@@ -49,16 +58,21 @@ public class GameSystem : MonoBehaviour
         GatherBots();
     }
 
+    public int GetMaxCheckpoints()
+    {
+        return MaxCheckpointLevels;
+    }
+
     void FixedUpdate()
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
         IsGameOver = (state == GameState.Completed);
-        botCars = botCars.OrderByDescending((car) => car.CurrentLap).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.DistanceFromNextWaypoint).ToList();
+        botCars = botCars.OrderByDescending((car) => car.GetCurrentLap()).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.GetDistanceFromNextWaypoint()).ToList();
         List<BotCar> aliveBots = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == false).ToList();
         bool AllBotsAreDead = botCars.All((cars) => cars.isActiveAndEnabled == false);
         bool OneBotIsLeft = (aliveBots.Count <= 1);
-        bool PlayerBeatTheFinalLapBeforeTheClosestBot = ((playerCar && playerCar.CurrentLap > Laps) && (botCars[0] && botCars[0].CurrentLap <= Laps));
-        bool BotBeatTheFinalLapBeforeThePlayer = ((playerCar && playerCar.CurrentLap <= Laps) && (botCars[0] && botCars[0].CurrentLap > Laps));
+        bool PlayerBeatTheFinalLapBeforeTheClosestBot = ((playerCar && playerCar.GetCurrentLap() > Laps) && (botCars[0] && botCars[0].GetCurrentLap() <= Laps));
+        bool BotBeatTheFinalLapBeforeThePlayer = ((playerCar && playerCar.GetCurrentLap() <= Laps) && (botCars[0] && botCars[0].GetCurrentLap() > Laps));
         bool DidPlayerWin = PlayerBeatTheFinalLapBeforeTheClosestBot || AllBotsAreDead;
         bool DidBotWin = (BotBeatTheFinalLapBeforeThePlayer || (playerCar.IsDead && OneBotIsLeft));
         bool done = false;
@@ -69,7 +83,7 @@ public class GameSystem : MonoBehaviour
         {
             if (DidBotWin) // We don't want this to run every frame as it is a relatively expensive operation
             {
-                Car car = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.CurrentLap > Laps);
+                Car car = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.GetCurrentLap() > Laps);
                 if (!car)
                 {
                     // The player and other bots have died, so find the surviving bot and call them a winner
@@ -147,7 +161,7 @@ public class GameSystem : MonoBehaviour
         gameUI.SetBoostText(playerCar.CurrentBoost);
 
         // General
-        gameUI.SetLapText($"Lap: {playerCar.CurrentLap}/{Laps}");
+        gameUI.SetLapText($"Lap: {playerCar.GetCurrentLap()}/{Laps}");
         gameUI.SetLeaderText($"{(Leader ? Leader.name : "Nobody")} is leading!");
         gameUI.SetCourseInformationText(botCars.FindAll((car) => !car.IsDead).Count + (!playerCar.IsDead ? 1 : 0), botCars.Count + 1);
     }
@@ -180,9 +194,9 @@ public class GameSystem : MonoBehaviour
 
         Waypoint playerNextWaypoint = playerCar.GetNextWaypoint();
         Waypoint leadingBotNextWaypoint = botCars[0].GetNextWaypoint();
-        bool PlayerOverlappingBot = playerCar.CurrentLap > botCars[0].CurrentLap;
-        bool BotOverlappingPlayer = playerCar.CurrentLap < botCars[0].CurrentLap;
-        bool PlayerAndBotAreOnSameLap = playerCar.CurrentLap == botCars[0].CurrentLap;
+        bool PlayerOverlappingBot = playerCar.GetCurrentLap() > botCars[0].GetCurrentLap();
+        bool BotOverlappingPlayer = playerCar.GetCurrentLap() < botCars[0].GetCurrentLap();
+        bool PlayerAndBotAreOnSameLap = playerCar.GetCurrentLap() == botCars[0].GetCurrentLap();
         bool OneOverlappingAnother = (PlayerOverlappingBot || BotOverlappingPlayer);
 
         if ((playerNextWaypoint && leadingBotNextWaypoint)) // Ensure that these are not null before working with them
@@ -216,9 +230,9 @@ public class GameSystem : MonoBehaviour
                 }
                 if (PlayerAndBotOnSameCheckpoint && !OneFartherThanAnother)
                 {
-                    bool PlayerClosestToNextCheckpoint = playerCar.DistanceFromNextWaypoint < botCars[0].DistanceFromNextWaypoint;
-                    bool BotClosestToNextCheckpoint = playerCar.DistanceFromNextWaypoint > botCars[0].DistanceFromNextWaypoint;
-                    
+                    bool PlayerClosestToNextCheckpoint = playerCar.GetDistanceFromNextWaypoint() < botCars[0].GetDistanceFromNextWaypoint();
+                    bool BotClosestToNextCheckpoint = playerCar.GetDistanceFromNextWaypoint() > botCars[0].GetDistanceFromNextWaypoint();
+
                     if (OneFartherThanAnother)
                     {
                         return;

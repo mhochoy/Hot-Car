@@ -3,10 +3,27 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
+    [Tooltip("The calculation of damage made from the magnitude (square root of x, y, z) of current linear and angular velocities.")]
     public float DamagePotential;
+    [Tooltip("The speed at which the car is moving in a straight line.")]
     public Vector3 currentLinearVelocity;
+    [Tooltip("The speed at which the car is moving on a curve.")]
     public Vector3 currentAngularVelocity;
+    [Tooltip("The rate of influence of the turning velocity. (From things like traps).")]
     public float turningInfluence;
+
+    private void Awake()
+    {
+        // If this script is active on a GameObject, then the GameObject will be designated as a PlayerCar
+        // and must be set up for the player to use out of the box if there is no setup detected.
+        if (transform.childCount <= 0)
+        {
+            GameObject car = new GameObject();
+            car.transform.parent = transform;
+            car.AddComponent<PlayerCar>();
+            car.AddComponent<CarSoundbank>();
+        }
+    }
 
     // Update is called once per frame
     void Update()

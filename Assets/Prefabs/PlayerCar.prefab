@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4719854997407508908}
   - component: {fileID: 1708743536994935961}
   - component: {fileID: 6186087577613413603}
+  - component: {fileID: 7563832435731952242}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -156,16 +157,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 627bad32aac662042907c2228ace3f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: {fileID: 0}
   Damage: 0
   Speed: 80
+  SpeedResistance: 2.29
   TurnSpeed: 0.76
+  TurnResistance: 5.16
+  CurrentBoost: {fileID: 0}
+  health: {fileID: 0}
   movement: {fileID: 5960422946273823692}
   carSounds: {fileID: 1708743536994935961}
-  CurrentLap: 1
-  DistanceFromNextWaypoint: 0
-  CurrentBoost: {fileID: 0}
-  controls: {fileID: 8498265197960137595}
+  controls: {fileID: 0}
 --- !u!82 &4719854997407508908
 AudioSource:
   m_ObjectHideFlags: 0
@@ -295,6 +296,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 100
+--- !u!114 &7563832435731952242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964160299570499883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c19649d52b2b1438ebb2a2cd3577aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accelerate: 0
+  deaccelerate: 0
+  turn: 0
+  brake: 0
+  Lock: 0
 --- !u!1 &3214702117145413260
 GameObject:
   m_ObjectHideFlags: 0
@@ -5043,7 +5061,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8685805266421158894}
-  - component: {fileID: 8498265197960137595}
   - component: {fileID: 5960422946273823692}
   m_Layer: 0
   m_Name: PlayerCar
@@ -5068,23 +5085,6 @@ Transform:
   - {fileID: 5611449284048412280}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 180}
---- !u!114 &8498265197960137595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4324442506320664980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51c19649d52b2b1438ebb2a2cd3577aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  accelerate: 0
-  deaccelerate: 0
-  turn: 0
-  brake: 0
-  Lock: 0
 --- !u!114 &5960422946273823692
 MonoBehaviour:
   m_ObjectHideFlags: 0

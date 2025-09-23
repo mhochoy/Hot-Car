@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class GameUI : MonoBehaviour
 {
+    [Header("Components")]
+    [SerializeField] AudioSource sound;
+    [Header("Properties")]
     public Animator animator;
     public TMP_Text LapText;
     public TMP_Text LeaderText;
@@ -17,7 +20,6 @@ public class GameUI : MonoBehaviour
     [SerializeField] List<AudioClip> TimeSounds = new List<AudioClip>();
     [SerializeField] AudioClip LapSound;
     AnimatorStateInfo animatorStateInfo;
-    [SerializeField] AudioSource sound;
 
     void Awake()
     {

@@ -6579,6 +6579,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711991797}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1728280411 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7563832435731952242, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
+  m_PrefabInstance: {fileID: 785983374728949367}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c19649d52b2b1438ebb2a2cd3577aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1746238111
 GameObject:
   m_ObjectHideFlags: 0
@@ -22266,6 +22277,10 @@ PrefabInstance:
       propertyPath: SubModule.subEmitters.Array.data[0].emitter
       value: 
       objectReference: {fileID: 198000014557105288}
+    - target: {fileID: 4069599235967025129, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
+      propertyPath: controls
+      value: 
+      objectReference: {fileID: 1728280411}
     - target: {fileID: 4324442506320664980, guid: 7225e5896e2cf574386907a7a93e90c4, type: 3}
       propertyPath: m_Name
       value: Player
@@ -22441,13 +22456,33 @@ PrefabInstance:
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: Speed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
       propertyPath: target
       value: 
       objectReference: {fileID: 566763879}
     - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: Acceleration
+      value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
       propertyPath: FirstWaypoint
       value: 
       objectReference: {fileID: 1157158777}
+    - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: TurnResistance
+      value: 5.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: SpeedResistance
+      value: 2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 3955944529129592152, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
+      propertyPath: ObstacleAvoidanceRadius
+      value: 0.64
+      objectReference: {fileID: 0}
     - target: {fileID: 6697501379805181784, guid: 6dfb49dcba29027448b2b156b42a8778, type: 3}
       propertyPath: value
       value: 100

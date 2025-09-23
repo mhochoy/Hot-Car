@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Mine : MonoBehaviour
 {
+    // This component can be used for any GameObject that will explode/give damage any time it is triggered.
     public float Damage;
 
     private void OnTriggerEnter(Collider other)

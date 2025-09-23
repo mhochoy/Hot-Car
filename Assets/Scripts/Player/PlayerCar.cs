@@ -1,9 +1,12 @@
+using System.ComponentModel;
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Controls))]
 public class PlayerCar : Car
 {
     public static PlayerCar instance;
+    [Header("Player Components")]
+    [Tooltip("The script that handles the recieving of input from a device.")]
     public Controls controls;
 
     protected override void Awake()
@@ -13,6 +16,8 @@ public class PlayerCar : Car
             instance = this;
         }
         base.Awake();
+
+        controls = GetComponent<Controls>();
     }
 
     protected override void FixedUpdate()

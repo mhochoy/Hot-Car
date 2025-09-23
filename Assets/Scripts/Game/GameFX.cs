@@ -4,6 +4,7 @@ public class GameFX : MonoBehaviour
 {
     public static GameFX instance;
 
+    [Header("FX Properties")]
     public GameObject ExplosionEffect;
     public GameObject SmokeStreamEffect;
     public GameObject ImpactEffect;

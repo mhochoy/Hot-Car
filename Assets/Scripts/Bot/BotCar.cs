@@ -1,18 +1,36 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(NavMeshAgent))]
+
 public class BotCar : Car
 {
-    public NavMeshAgent agent;
-    public Transform target;
+    [Header("Bot Properties")]
+    [Tooltip("The first waypoint that the bot car will have to follow. Necessary for bot to stay on track!")]
     public Waypoint FirstWaypoint;
+    [Tooltip("How quickly the bot car gets up to speed (n * 10).")]
+    public float Acceleration;
+    [Tooltip("The range that the bot car will avoid danger.")]
+    public float ObstacleAvoidanceRadius;
+    [Tooltip("Is set from the GameSystem script. Used during countdowns.")]
     public bool Stop;
+
+    [Header("Bot Components")]
+    public NavMeshAgent agent;
+
+
+    Transform target;
+
 
     protected override void Awake()
     {
         base.Awake();
         agent.destination = FirstWaypoint.transform.position;
+        agent.speed = base.Speed;
+        agent.acceleration = Acceleration * 10;
+        agent.angularSpeed = base.TurnSpeed * 100;
+        agent.radius = ObstacleAvoidanceRadius;
+        agent.stoppingDistance = 0.81f;
     }
 
     // Update is called once per frame
@@ -22,10 +40,6 @@ public class BotCar : Car
         base.FixedUpdate();
         agent.isStopped = Stop;
         Damage = Mathf.Abs(agent.velocity.magnitude) / 1.25f;
-        var lookPos = target.position - agent.destination;
-        lookPos.x = 0.00f;
-        lookPos.z = 0.00f;
-        var rotation = Quaternion.LookRotation(lookPos);
         agent.updateRotation = true;
         //transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime);
         //movement.Accelerate(Vector3.Angle(rotation.eulerAngles, transform.rotation.eulerAngles), Speed, TurnSpeed);

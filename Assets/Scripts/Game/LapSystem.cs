@@ -13,7 +13,7 @@ public class LapSystem : MonoBehaviour
         {
             Car car = other.GetComponent<Car>();
 
-            if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.MaxCheckpointLevels)
+            if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.GetMaxCheckpoints())
             {
                 other.SendMessage("NextLap");
                 other.SendMessage("ClearCompletedWaypoints");

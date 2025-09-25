@@ -1,5 +1,8 @@
 using System.ComponentModel;
 using UnityEngine;
+using System.Collections.Generic;
+using NUnit.Framework.Constraints;
+using System;
 
 [RequireComponent(typeof(Controls))]
 public class PlayerCar : Car
@@ -8,6 +11,10 @@ public class PlayerCar : Car
     [Header("Player Components")]
     [Tooltip("The script that handles the recieving of input from a device.")]
     public Controls controls;
+    int currentCamIndex = 0;
+    int maxCams = 0;
+    Camera currentCam;
+    List<Camera> cameras = new List<Camera>();
 
     protected override void Awake()
     {
@@ -18,6 +25,21 @@ public class PlayerCar : Car
         base.Awake();
 
         controls = GetComponent<Controls>();
+        foreach (Transform ob in transform)
+        {
+            Camera cam = ob.GetComponent<Camera>();
+            if (cam)
+            {
+                cameras.Add(cam);
+            }
+        }
+
+        maxCams = cameras.Count - 1;
+        if (currentCamIndex > maxCams)
+        {
+            currentCam = cameras[0];
+        }
+        currentCam = cameras[currentCamIndex];
     }
 
     protected override void FixedUpdate()
@@ -45,6 +67,43 @@ public class PlayerCar : Car
         if (controls.brake)
         {
             movement.Reverse(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);
+        }
+
+        
+    }
+
+    void Update()
+    {
+        if (controls.switchCam)
+        {
+            SwitchCamera();
+        }
+    }
+
+    void SwitchCamera()
+    {
+        try
+        {
+            currentCamIndex++;
+            Camera nextCam = cameras[currentCamIndex];
+            currentCam.gameObject.SetActive(false);
+            if (nextCam.gameObject.activeSelf == false)
+            {
+                nextCam.gameObject.SetActive(true);
+            }
+
+            currentCam = nextCam;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            currentCamIndex = 0;
+            currentCam.gameObject.SetActive(false);
+            Camera baseCamera = cameras[currentCamIndex];
+            if (baseCamera.gameObject.activeSelf == false)
+            {
+                baseCamera.gameObject.SetActive(true);
+            }
+            currentCam = baseCamera;
         }
     }
 

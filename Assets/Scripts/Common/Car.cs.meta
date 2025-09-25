@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 839e3d341b020e54bba95d6640f63001
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - CurrentBoost: {instanceID: 0}
+  - health: {instanceID: 0}
+  - movement: {instanceID: 0}
+  - carSounds: {fileID: 11400000, guid: 90012df6e7bbcfd49b48f8c0326551df, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

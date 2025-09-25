@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 456b89249b5d3974fa707370ef1cd1e6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Idle: {fileID: 8300000, guid: 46d8e427edd17934094e5fdb6aa74e6b, type: 3}
+  - Accelerate: {fileID: 8300000, guid: e8f3ee789e326bf45bb9d20ffffdbcd4, type: 3}
+  - AccelerateLoop: {fileID: 8300000, guid: 94edefffe995b0a4a9b9e06d612cb351, type: 3}
+  - Deaccelerate: {fileID: 8300000, guid: f4126e97d7764e44f827d13f01d70ea4, type: 3}
+  - Crash: {fileID: 8300000, guid: 2294bd788aa23f6499883d50bce37e00, type: 3}
+  - TireScratch: {fileID: 8300000, guid: 85a2a3eb8b5c86e4593311bc5bb11a6c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

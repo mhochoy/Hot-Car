@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Health))]
-[RequireComponent(typeof(CarSoundbank))]
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Rigidbody))]
 public class Car : MonoBehaviour
@@ -24,7 +23,7 @@ public class Car : MonoBehaviour
     [Header("Car Components")]
     public Health health;
     public Movement movement;
-    public CarSoundbank carSounds;
+    public CarSounds carSounds;
 
     protected Vector3 currentVelocity; // Really meant for use with the BotCar
     Rigidbody physics;
@@ -41,7 +40,7 @@ public class Car : MonoBehaviour
         health = GetComponent<Health>();
         movement = GetComponentInParent<Movement>();
         sound = GetComponent<AudioSource>();
-        carSounds = GetComponent<CarSoundbank>();
+        //carSounds = GetComponent<CarSoundbank>();
         physics = GetComponent<Rigidbody>();
         originalPitch = sound.pitch;
 
@@ -63,7 +62,7 @@ public class Car : MonoBehaviour
         {
             float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude)) * .05f, .9f, Mathf.Infinity);
             sound.pitch = newPitch;
-            PlayInterruptingLoopSound(carSounds.AccelerationLoop);
+            PlayInterruptingLoopSound(carSounds.AccelerateLoop);
         }
         else
         {
@@ -121,6 +120,18 @@ public class Car : MonoBehaviour
         {
             this.CurrentBoost = boost;
             this.CurrentBoost.Activate();
+        }
+    }
+
+    public Rigidbody GetPhysics()
+    {
+        if (physics)
+        {
+            return physics;
+        }
+        else
+        {
+            return null;
         }
     }
 

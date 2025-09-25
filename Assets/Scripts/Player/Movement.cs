@@ -23,9 +23,10 @@ public class Movement : MonoBehaviour
             car.AddComponent<PlayerCar>();
             car.AddComponent<CarSoundbank>();
         }
+
+        rb = GetComponentInChildren<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         DamagePotential = (rb.linearVelocity + rb.angularVelocity).magnitude;

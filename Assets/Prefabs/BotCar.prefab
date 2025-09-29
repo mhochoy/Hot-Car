@@ -157,17 +157,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe05dc2b3d411da49bbeb03e1440cdc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: {fileID: 6697501379805181784}
   Damage: 0
-  Speed: 13.85
+  Speed: 50
+  SpeedResistance: 2.58
   TurnSpeed: 4.3
+  TurnResistance: 5.6
+  CurrentBoost: {fileID: 0}
+  health: {fileID: 6697501379805181784}
   movement: {fileID: 4084007747824860319}
-  carSounds: {fileID: 5224566741126614714}
-  CurrentLap: 1
-  DistanceFromNextWaypoint: 0
-  agent: {fileID: 8783394313921393835}
-  target: {fileID: 0}
+  carSounds: {fileID: 11400000, guid: 90012df6e7bbcfd49b48f8c0326551df, type: 2}
+  physics: {fileID: 0}
   FirstWaypoint: {fileID: 0}
+  Acceleration: 2.4
+  ObstacleAvoidanceRadius: 0.37
+  Stop: 0
+  agent: {fileID: 8783394313921393835}
 --- !u!114 &6697501379805181784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c388938821e3749897748c10d4b455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 40
+  value: 100
 --- !u!82 &2679438467532687231
 AudioSource:
   m_ObjectHideFlags: 0
@@ -194,7 +198,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.09
+  m_Volume: 0.098
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -203,7 +207,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 45
+  MaxDistance: 70
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0
@@ -306,8 +310,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 189214635300228924}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.47
-  m_Speed: 40
+  m_Radius: 0.64
+  m_Speed: 50
   m_Acceleration: 24
   avoidancePriority: 50
   m_AngularSpeed: 560
@@ -318,7 +322,7 @@ NavMeshAgent:
   m_Height: 1.09
   m_BaseOffset: 0.53
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 3
+  m_ObstacleAvoidanceType: 1
 --- !u!1 &475012469358317317
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 475012469358317317}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70759624, z: -0, w: -0.70661706}
+  m_LocalRotation: {x: 0, y: 0.7075943, z: -0, w: -0.70661896}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -368,6 +372,7 @@ MonoBehaviour:
   DamagePotential: 0
   currentLinearVelocity: {x: 0, y: 0, z: 0}
   currentAngularVelocity: {x: 0, y: 0, z: 0}
+  turningInfluence: 0
 --- !u!1 &4900266820051422129
 GameObject:
   m_ObjectHideFlags: 0

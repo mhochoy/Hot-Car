@@ -14,22 +14,14 @@ public class Movement : MonoBehaviour
 
     private void Awake()
     {
-        // If this script is active on a GameObject, then the GameObject will be designated as a PlayerCar
-        // and must be set up for the player to use out of the box if there is no setup detected.
-        if (transform.childCount <= 0)
-        {
-            GameObject car = new GameObject();
-            car.transform.parent = transform;
-            car.AddComponent<PlayerCar>();
-            car.AddComponent<CarSoundbank>();
-        }
-
-        rb = GetComponentInChildren<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        //car = transform.GetChild(0);
     }
 
     void Update()
     {
         DamagePotential = (rb.linearVelocity + rb.angularVelocity).magnitude;
+        
         currentLinearVelocity = rb.linearVelocity;
         currentAngularVelocity = rb.angularVelocity;
 
@@ -39,20 +31,23 @@ public class Movement : MonoBehaviour
     public void Accelerate(float horiz, float Speed, float TurnSpeed)
     {
         // Apply Engine Force
-        Vector2 engineForce = transform.up * Speed;
-        rb.AddRelativeForce(engineForce, ForceMode.Acceleration);
+        Vector3 engineForce = transform.forward * Speed;
+        rb.AddForce(engineForce, ForceMode.Acceleration);
 
         // Apply Steering
-        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f) + turningInfluence;
+        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude) + turningInfluence;
         rb.angularVelocity = new Vector3(0, turn, 0);
+        //rb.rotation = Quaternion.Euler(0, turn, 0);
+       // rb.AddTorque(0, turn, 0, ForceMode.Acceleration);
     }
 
     public void Reverse(float horiz, float Speed, float TurnSpeed)
     {
-        Vector2 engineForce = (-transform.up * Speed) / 2;
-        rb.AddRelativeForce(engineForce, ForceMode.Acceleration);
+        Vector3 engineForce = (transform.forward * (Speed * .75f));
+        rb.AddForce(-engineForce, ForceMode.Acceleration);
 
-        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude / 10f) + turningInfluence;
+        float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude) + turningInfluence;
         rb.angularVelocity = new Vector3(0, -turn, 0);
+        //rb.AddTorque(0, -turn, 0, ForceMode.Acceleration);
     }
 }

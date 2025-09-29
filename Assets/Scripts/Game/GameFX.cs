@@ -8,6 +8,7 @@ public class GameFX : MonoBehaviour
     public GameObject ExplosionEffect;
     public GameObject SmokeStreamEffect;
     public GameObject ImpactEffect;
+    public GameObject LandingEffect;
 
     void Awake()
     {
@@ -30,5 +31,10 @@ public class GameFX : MonoBehaviour
     public void SpawnImpactEffect(Vector3 position)
     {
         GameObject impact = Instantiate(ImpactEffect, position, Quaternion.identity);
+    }
+
+    public void SpawnLandingEffect(Vector3 position)
+    {
+        GameObject impact = Instantiate(LandingEffect, position, Quaternion.identity);
     }
 }

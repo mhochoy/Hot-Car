@@ -807,6 +807,7 @@ MonoBehaviour:
   Leader: {fileID: 0}
   Laps: 5
   TotalTime: 0
+  GravityMultiplier: 1
 --- !u!114 &1770516075901033088
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,7 +16,6 @@ public class Controls : MonoBehaviour
             accelerate = false;
             deaccelerate = false;
             brake = false;
-            switchCam = false;
             turn = 0.00f;
             return;
         }

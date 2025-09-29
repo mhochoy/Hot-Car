@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class CarSetupWizard : ScriptableWizard
 {
@@ -9,6 +10,7 @@ public class CarSetupWizard : ScriptableWizard
     [Header("Properties")]
     public string Name;
     [Header("Physics Properties")]
+    public float Health;
     public float Mass;
     public float Speed;
     public float SpeedResistance; 
@@ -40,10 +42,8 @@ public class CarSetupWizard : ScriptableWizard
     {
         BotCar botCar = CarObject.GetComponent<BotCar>();
         Rigidbody rb = null;
-        GameObject parent = new GameObject(Name + "Parent");
 
         CarObject.name = Name;
-        CarObject.transform.parent = parent.transform;
         CarObject.tag = "Bot";
         CarObject.layer = 6;
 
@@ -64,27 +64,40 @@ public class CarSetupWizard : ScriptableWizard
     {
         PlayerCar playerCar = CarObject.GetComponent<PlayerCar>();
         Rigidbody rb = null;
-        GameObject parent = new GameObject(Name + "Parent");
         GameObject cameras = Instantiate((GameObject)Resources.Load("Cameras"));
+        GameObject cinemachineCam = Instantiate((GameObject)Resources.Load("CinemachineCamera"));
+        CinemachineCamera cinemachineCamProperties = cinemachineCam.GetComponent<CinemachineCamera>();
+        CameraTarget target = new CameraTarget();
 
-        parent.tag = "Player";
         CarObject.name = Name;
-        parent.AddComponent<Movement>();
-        CarObject.transform.parent = parent.transform;
+        CarObject.AddComponent<Movement>();
+        CarObject.AddComponent<Controls>();
         CarObject.tag = "Player";
         CarObject.layer = 6;
-        cameras.transform.parent = CarObject.transform;
-        cameras.transform.position = new Vector3(0, 0, 0);
-        cameras.transform.rotation = new Quaternion(-90, 0, 0, 0);
 
+        cameras.transform.parent = CarObject.transform;
+        cameras.transform.localPosition = new Vector3(0, 0, 0);
+        cameras.transform.localRotation = Quaternion.Euler(-90f, 0, -90f);
+        cameras.transform.localScale = new Vector3(1f, 1f, 1f);
+
+        cinemachineCam.transform.parent = CarObject.transform;
+        target.TrackingTarget = CarObject.transform;
+        cinemachineCamProperties.Target = target;
+
+        // Link essential components (need to be assigned before the game is run
         if (playerCar == null)
         {
             playerCar = CarObject.AddComponent<PlayerCar>();
+            // Best time to assign health
+            Health health =  playerCar.AddComponent<Health>();
+            playerCar.health = health;
+            // ---------
             rb = playerCar.GetComponent<Rigidbody>();
         }
         if (rb == null)
         {
-            CarObject.AddComponent<Rigidbody>();
+            rb = CarObject.AddComponent<Rigidbody>();
+            playerCar.physics = rb;
         }
 
         ConfigureCar(playerCar, rb);
@@ -98,17 +111,23 @@ public class CarSetupWizard : ScriptableWizard
         }
         if (TurnResistance == 0.00f)
         {
+            TurnResistance = 1.00f * 5f;
+        }
+        else
+        {
             TurnResistance *= 1.00f * 5f;
         }
 
+        car.health.value = Health;
         car.Speed = Speed;
         car.SpeedResistance = SpeedResistance;
         car.TurnSpeed = TurnSpeed;
         car.TurnResistance = TurnResistance;
+        car.carSounds = new CarSounds();
 
         if (physics)
         {
-            physics.useGravity = false;
+            physics.useGravity = true;
         }
         if (Mass != 0)
         {
@@ -125,14 +144,13 @@ public class CarSetupWizard : ScriptableWizard
 
     void OnWizardUpdate()
     {
-        helpString = "This wizard will help you assemble your car.\nEnsure that your car is facing forward on the x-axis!";
-        isValid = false;
+        helpString = "This wizard will help you assemble your car.\nEnsure that your car is facing forward on the z-axis!";
 
         if (CarObject == null || Name == "")
         {
             if (CarObject == null)
             {
-                errorString = "You must assign a GameObjet for the car!";
+                errorString = "You must assign a GameObject for the car!";
             }
             else if (Name.Length == 0)
             {

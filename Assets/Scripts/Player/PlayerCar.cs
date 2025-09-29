@@ -3,18 +3,20 @@ using UnityEngine;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using System;
+using System.Linq;
 
-[RequireComponent(typeof(Controls))]
 public class PlayerCar : Car
 {
     public static PlayerCar instance;
     [Header("Player Components")]
     [Tooltip("The script that handles the recieving of input from a device.")]
     public Controls controls;
-    int currentCamIndex = 0;
-    int maxCams = 0;
-    Camera currentCam;
-    List<Camera> cameras = new List<Camera>();
+
+    // Cameras
+    int currentCamIndex = 1;
+    GameObject currentCam;
+    List<GameObject> cameras = new List<GameObject>();
+
 
     protected override void Awake()
     {
@@ -24,29 +26,21 @@ public class PlayerCar : Car
         }
         base.Awake();
 
-        controls = GetComponent<Controls>();
-        foreach (Transform ob in transform)
-        {
-            Camera cam = ob.GetComponent<Camera>();
-            if (cam)
-            {
-                cameras.Add(cam);
-            }
-        }
+        controls = GetComponentInParent<Controls>();
 
-        maxCams = cameras.Count - 1;
-        if (currentCamIndex > maxCams)
+        cameras = GameObject.FindGameObjectsWithTag("MainCamera").ToList();
+
+        if (cameras.Count > currentCamIndex)
         {
-            currentCam = cameras[0];
+            currentCam = cameras[currentCamIndex];
         }
-        currentCam = cameras[currentCamIndex];
     }
 
     protected override void FixedUpdate()
     {
-        Damage = movement.DamagePotential;
+        Damage = movement.DamagePotential + ((Math.Round(movement.currentLinearVelocity.z) != 0f ? physics.mass / 2f : 0f));
         base.FixedUpdate();
-        if (controls.Lock)
+        if (controls.Lock || Grounded == false)
         {
             return;
         }
@@ -74,37 +68,36 @@ public class PlayerCar : Car
 
     void Update()
     {
+        if (!currentCam.activeSelf)
+        {
+            currentCam.SetActive(true);
+        }
+        foreach (GameObject cam in cameras)
+        {
+            if (cam != currentCam)
+            {
+                cam.SetActive(false);
+            }
+        }
         if (controls.switchCam)
         {
+            Debug.Log("Switch Camera Button was pressed (E)");
             SwitchCamera();
         }
     }
 
     void SwitchCamera()
     {
-        try
-        {
-            currentCamIndex++;
-            Camera nextCam = cameras[currentCamIndex];
-            currentCam.gameObject.SetActive(false);
-            if (nextCam.gameObject.activeSelf == false)
-            {
-                nextCam.gameObject.SetActive(true);
-            }
-
-            currentCam = nextCam;
-        }
-        catch (ArgumentOutOfRangeException)
+        if (currentCamIndex + 1 > cameras.Count - 1)
         {
             currentCamIndex = 0;
-            currentCam.gameObject.SetActive(false);
-            Camera baseCamera = cameras[currentCamIndex];
-            if (baseCamera.gameObject.activeSelf == false)
-            {
-                baseCamera.gameObject.SetActive(true);
-            }
-            currentCam = baseCamera;
         }
+        else
+        {
+            currentCamIndex++;
+        }
+
+        currentCam = cameras[currentCamIndex];
     }
 
     protected override void Death()
@@ -120,8 +113,6 @@ public class PlayerCar : Car
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
         Health otherHealth = collision.gameObject.GetComponent<Health>();
 
-        GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
-
         if (botCar)
         {
             if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
@@ -135,9 +126,16 @@ public class PlayerCar : Car
             otherHealth.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
         }
 
+        else if (collision.gameObject.layer == 7 || collision.gameObject.layer == 0 && Grounded)
+        {
+            GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
+            //health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 8);
+        }
+
         else if (!botCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 4);
+            Debug.Log("Damage the car");
+            //health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 4);
         }
 
         if (collision.gameObject.CompareTag("Prop"))

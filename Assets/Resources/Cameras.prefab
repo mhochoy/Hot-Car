@@ -26,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 903581270897436077}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5955176, y: 0.3812596, z: 0.3812596, w: 0.5955176}
   m_LocalPosition: {x: -9.96, y: 17.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8777593960717733481}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 24.744, y: 90, z: 90}
 --- !u!198 &4100581972416715094
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9283,14 +9283,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7107410039480417368}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: -0.5}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 1.1619378, y: -43.550007, z: 8.306201}
   m_LocalScale: {x: 4.2879987, y: 4.287999, z: 4.2879996}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9172359086862077504}
   m_Father: {fileID: 4224991569881909423}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!1 &8485383966687638050
 GameObject:
   m_ObjectHideFlags: 0
@@ -9302,7 +9302,7 @@ GameObject:
   - component: {fileID: 9207158105429242006}
   m_Layer: 6
   m_Name: Cameras
-  m_TagString: Untagged
+  m_TagString: Cams
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9335,13 +9335,14 @@ GameObject:
   - component: {fileID: 4224991569881909423}
   - component: {fileID: 2500253334407904627}
   - component: {fileID: 8069697414074726739}
+  - component: {fileID: 150031793656124102}
   m_Layer: 0
   m_Name: ThreeDCam
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4224991569881909423
 Transform:
   m_ObjectHideFlags: 0
@@ -9350,8 +9351,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8801034622974557505}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.59403586, y: 0.59403586, z: 0.3835641, w: 0.3835641}
-  m_LocalPosition: {x: -3, y: 0, z: 6.2999997}
+  m_LocalRotation: {x: 0.13972133, y: -0.6931653, z: 0.13972141, w: 0.693165}
+  m_LocalPosition: {x: 3.782702, y: 5.496833, z: -21.588314}
   m_LocalScale: {x: 0.69800717, y: 0.3379174, z: 1.189202}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9391,7 +9392,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -9417,3 +9418,35 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8801034622974557505}
   m_Enabled: 1
+--- !u!114 &150031793656124102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801034622974557505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 0
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  CustomBlends: {fileID: 0}

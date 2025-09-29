@@ -36,6 +36,7 @@ public class GameSystem : MonoBehaviour
     PlayerCar playerCar;
     List<BotCar> botCars = new List<BotCar>();
     List<Waypoint> allWaypoints = new List<Waypoint>();
+    bool AnyCheckpoints;
 
     void Awake()
     {
@@ -54,6 +55,7 @@ public class GameSystem : MonoBehaviour
 
         allWaypoints = allWaypoints.OrderByDescending((waypoint) => waypoint.level).ToList();
         MaxCheckpointLevels = allWaypoints.Count;
+        AnyCheckpoints = MaxCheckpointLevels > 0;
 
         GatherBots();
     }
@@ -66,6 +68,15 @@ public class GameSystem : MonoBehaviour
     void FixedUpdate()
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
+
+        if (!AnyCheckpoints)
+        {
+            HandleUI();
+            HandleGameExtras();
+            return;
+            // Free Roam
+        }
+
         IsGameOver = (state == GameState.Completed);
         botCars = botCars.OrderByDescending((car) => car.GetCurrentLap()).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.GetDistanceFromNextWaypoint()).ToList();
         List<BotCar> aliveBots = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == false).ToList();

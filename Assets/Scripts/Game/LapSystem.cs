@@ -12,6 +12,10 @@ public class LapSystem : MonoBehaviour
         if (other.gameObject.layer == 6)
         {
             Car car = other.GetComponent<Car>();
+            if (car == null)
+            {
+                car = other.GetComponentInParent<Car>();
+            }
 
             if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.GetMaxCheckpoints())
             {

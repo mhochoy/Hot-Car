@@ -15,7 +15,6 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        //car = transform.GetChild(0);
     }
 
     void Update()
@@ -24,8 +23,6 @@ public class Movement : MonoBehaviour
         
         currentLinearVelocity = rb.linearVelocity;
         currentAngularVelocity = rb.angularVelocity;
-
-        //Debug.Log("The current damage potential is: " + DamagePotential);
     }
 
     public void Accelerate(float horiz, float Speed, float TurnSpeed)
@@ -37,17 +34,14 @@ public class Movement : MonoBehaviour
         // Apply Steering
         float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude) + turningInfluence;
         rb.angularVelocity = new Vector3(0, turn, 0);
-        //rb.rotation = Quaternion.Euler(0, turn, 0);
-       // rb.AddTorque(0, turn, 0, ForceMode.Acceleration);
     }
 
     public void Reverse(float horiz, float Speed, float TurnSpeed)
     {
-        Vector3 engineForce = (transform.forward * (Speed * .75f));
+        Vector3 engineForce = (transform.forward * (Speed));
         rb.AddForce(-engineForce, ForceMode.Acceleration);
 
         float turn = horiz * TurnSpeed * (rb.linearVelocity.magnitude) + turningInfluence;
         rb.angularVelocity = new Vector3(0, -turn, 0);
-        //rb.AddTorque(0, -turn, 0, ForceMode.Acceleration);
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8345428322331856548}
-  - component: {fileID: 315115441850494280}
   m_Layer: 0
   m_Name: TallTree
   m_TagString: Untagged
@@ -34,20 +33,6 @@ Transform:
   - {fileID: 7272148719377324561}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &315115441850494280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268954909715701374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3770c55e1e67e4805bcf322ae01885f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Category: prop
-  m_OnlyVariants: 0
 --- !u!1 &5882487228976499270
 GameObject:
   m_ObjectHideFlags: 0

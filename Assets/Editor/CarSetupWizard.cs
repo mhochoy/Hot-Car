@@ -1,7 +1,8 @@
+using log4net.Util;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using Unity.Cinemachine;
 
 public class CarSetupWizard : ScriptableWizard
 {
@@ -18,6 +19,9 @@ public class CarSetupWizard : ScriptableWizard
     public float TurnResistance;
     [Header("Game Properties")]
     public bool IsBot;
+    float x;
+    float y;
+    float z;
 
     [MenuItem("Car/Create")]
 
@@ -46,6 +50,7 @@ public class CarSetupWizard : ScriptableWizard
         CarObject.name = Name;
         CarObject.tag = "Bot";
         CarObject.layer = 6;
+        SetCollider();
 
         if (botCar == null)
         {
@@ -74,6 +79,7 @@ public class CarSetupWizard : ScriptableWizard
         CarObject.AddComponent<Controls>();
         CarObject.tag = "Player";
         CarObject.layer = 6;
+        SetCollider();
 
         cameras.transform.parent = CarObject.transform;
         cameras.transform.localPosition = new Vector3(0, 0, 0);
@@ -140,6 +146,41 @@ public class CarSetupWizard : ScriptableWizard
 
         physics.linearDamping = car.SpeedResistance;
         physics.angularDamping = car.TurnResistance;
+    }
+
+    void SetCollider()
+    {
+        foreach (GameObject t in CarObject.transform)
+        {
+            MeshRenderer meshRend = t.GetComponent<MeshRenderer>();
+
+            if (meshRend)
+            {
+                float maxX = meshRend.localBounds.max.x;
+                float maxY = meshRend.localBounds.max.y;
+                float maxZ = meshRend.localBounds.max.z;
+
+                if (maxX > x)
+                {
+                    x = maxX;
+                }
+                if (maxY > y)
+                {
+                    y = maxY;
+                }
+                if (maxZ > z)
+                {
+                    z = maxZ;
+                }
+            }
+        }
+
+        if (CarObject.GetComponent<Collider>() == null)
+        {
+            BoxCollider boxCollider = CarObject.AddComponent<BoxCollider>();
+
+            boxCollider.size = new Vector3(x, y, z);
+        }
     }
 
     void OnWizardUpdate()

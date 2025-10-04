@@ -35,7 +35,6 @@ public class Car : MonoBehaviour
     Waypoint nextWaypoint;
     bool spawnEffectOnLand = false;
 
-
     protected virtual void Awake()
     {
         health = GetComponent<Health>();
@@ -45,25 +44,19 @@ public class Car : MonoBehaviour
         //carSounds = GetComponent<CarSoundbank>();
         physics = GetComponent<Rigidbody>();
         originalPitch = sound.pitch;
+
+        
     }
 
     protected virtual void FixedUpdate()
     {
         RaycastHit info;
-        /*if (Physics.Raycast(transform.position, -transform.up, out info, 1f))
-        {
-            if (info.transform.gameObject.layer == 7)
-            {
-                Grounded = true;
-            }
-            else
-            {
-                Grounded = false;
-            }
-        }*/
 
         IsDead = health.value <= 0;
         DistanceFromNextWaypoint = nextWaypoint ? Vector3.Distance(this.transform.position, nextWaypoint.transform.position) : 0.00f;
+
+        SpeedResistance = Speed / Mathf.Abs(((Speed / 2) - 7));
+        TurnResistance = TurnSpeed * 10f;
 
         physics.linearDamping = SpeedResistance;
         physics.angularDamping = TurnResistance;
@@ -143,7 +136,7 @@ public class Car : MonoBehaviour
         if (collision.gameObject.layer == 7 || collision.gameObject.layer == 0) // Map Layer
         {
             Grounded = false;
-            if (Physics.Raycast(transform.localPosition, -transform.up, 2f, 7 | 0) && !Grounded)
+            if (Physics.Raycast(transform.localPosition, -transform.up, Mathf.Infinity, 7 | 0) && !Grounded)
             {
                 Debug.Log("Spawn that landing effect!!!");
                 spawnEffectOnLand = true;

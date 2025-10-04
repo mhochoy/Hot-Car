@@ -14,9 +14,7 @@ public class CarSetupWizard : ScriptableWizard
     public float Health;
     public float Mass;
     public float Speed;
-    public float SpeedResistance; 
     public float TurnSpeed;
-    public float TurnResistance;
     [Header("Game Properties")]
     public bool IsBot;
     float x;
@@ -111,25 +109,14 @@ public class CarSetupWizard : ScriptableWizard
 
     void ConfigureCar(Car car, Rigidbody physics)
     {
-        if (SpeedResistance == 0.00f)
+        if (TurnSpeed > 0)
         {
-            SpeedResistance = Speed / Mathf.Abs(((Speed / 2) - 5));
+            TurnSpeed = TurnSpeed * .10f;
         }
-        if (TurnResistance == 0.00f)
-        {
-            TurnResistance = 1.00f * 5f;
-        }
-        else
-        {
-            TurnResistance *= 1.00f * 5f;
-        }
-
         car.health.value = Health;
         car.Speed = Speed;
-        car.SpeedResistance = SpeedResistance;
         car.TurnSpeed = TurnSpeed;
-        car.TurnResistance = TurnResistance;
-        car.carSounds = new CarSounds();
+        car.carSounds = (CarSounds)Instantiate(Resources.Load("CarSounds"));
 
         if (physics)
         {
@@ -143,9 +130,6 @@ public class CarSetupWizard : ScriptableWizard
         {
             physics.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
-
-        physics.linearDamping = car.SpeedResistance;
-        physics.angularDamping = car.TurnResistance;
     }
 
     void SetCollider()

@@ -12,12 +12,8 @@ public class Car : MonoBehaviour
     public float Damage;
     [Tooltip("The speed at which the car must travel (See Movement.cs for Player implementation.)")]
     public float Speed;
-    [Tooltip("The rate at which speed is resisted. (A truck-like vehicle requires higher speed resistance.")]
-    public float SpeedResistance;
     [Tooltip("The speed at which the car must turn.")]
     public float TurnSpeed;
-    [Tooltip("The rate at which turning is resisted. (A heavier or fast vehicle requires higher turn resistance.")]
-    public float TurnResistance;
     public Boost CurrentBoost;
     [Header("Car Components")]
     public Health health;
@@ -31,6 +27,7 @@ public class Car : MonoBehaviour
     float DistanceFromNextWaypoint;
     AudioSource sound;
     float originalPitch;
+    float originalVolume;
     List<Waypoint> completedWaypoints = new List<Waypoint>();
     Waypoint nextWaypoint;
     bool spawnEffectOnLand = false;
@@ -41,11 +38,9 @@ public class Car : MonoBehaviour
         movement = GetComponentInParent<Movement>();
         sound = GetComponent<AudioSource>();
         sound.volume = sound.volume / 4;
-        //carSounds = GetComponent<CarSoundbank>();
         physics = GetComponent<Rigidbody>();
         originalPitch = sound.pitch;
-
-        
+        originalVolume = sound.volume;
     }
 
     protected virtual void FixedUpdate()
@@ -55,12 +50,12 @@ public class Car : MonoBehaviour
         IsDead = health.value <= 0;
         DistanceFromNextWaypoint = nextWaypoint ? Vector3.Distance(this.transform.position, nextWaypoint.transform.position) : 0.00f;
 
-        SpeedResistance = Speed / Mathf.Abs(((Speed / 2) - 7));
-        TurnResistance = TurnSpeed * 10f;
+        physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + (physics.centerOfMass * (physics.mass / 16));
 
-        physics.linearDamping = SpeedResistance;
-        physics.angularDamping = TurnResistance;
-        physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + physics.centerOfMass;
+        if (!Grounded)
+        {
+            physics.AddTorque(physics.transform.right * physics.mass / 256, ForceMode.VelocityChange);
+        }
 
         if (CurrentBoost && !CurrentBoost.isActiveAndEnabled)
         {
@@ -69,13 +64,15 @@ public class Car : MonoBehaviour
 
         if (movement.currentLinearVelocity.magnitude > .1f)
         {
-            float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude)) * .05f, .9f, Mathf.Infinity);
+            float newPitch = Mathf.Clamp((((this is PlayerCar) ? movement.currentLinearVelocity.magnitude - movement.currentAngularVelocity.magnitude : currentVelocity.magnitude)) * .025f, .75f, Mathf.Infinity);
             sound.pitch = newPitch;
+            sound.volume = newPitch * .175f;
             PlayInterruptingLoopSound(carSounds.AccelerateLoop);
         }
         else
         {
             sound.pitch = originalPitch;
+            sound.volume = originalVolume / 2;
             PlayInterruptingLoopSound(carSounds.Idle);
         }
     }

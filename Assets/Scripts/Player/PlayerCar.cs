@@ -38,7 +38,7 @@ public class PlayerCar : Car
 
     protected override void FixedUpdate()
     {
-        Damage = movement.DamagePotential + ((Math.Round(movement.currentLinearVelocity.z) != 0f ? physics.mass / 2f : 0f));
+        Damage = movement.DamagePotential + ((Math.Round(movement.currentLinearVelocity.z) != 0f ? physics.mass / 64f : 0f));
         base.FixedUpdate();
         if (controls.Lock || Grounded == false)
         {

@@ -252,6 +252,7 @@ public class GameSystem : MonoBehaviour
                     {
                         Leader = playerCar;
                     }
+
                     if (BotClosestToNextCheckpoint)
                     {
                         Leader = botCars[0];
@@ -259,10 +260,19 @@ public class GameSystem : MonoBehaviour
                 }
             }
         }
+        else if (!playerNextWaypoint && leadingBotNextWaypoint)
+        {
+            Leader = botCars[0];
+        }
+        else if (playerNextWaypoint && !leadingBotNextWaypoint)
+        {
+            Leader = playerCar;
+        }
         else
         {
             // Neither player or bot have crossed the first checkpoint yet, therefore, technically, nobody is leading...
             Leader = null;
+            Debug.Log("Neither has a next waypoint");
         }
     }
 

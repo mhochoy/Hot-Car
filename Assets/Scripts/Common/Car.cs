@@ -29,7 +29,7 @@ public class Car : MonoBehaviour
     float originalPitch;
     float originalVolume;
     List<Waypoint> completedWaypoints = new List<Waypoint>();
-    Waypoint nextWaypoint;
+    protected Waypoint nextWaypoint;
     bool spawnEffectOnLand = false;
 
     protected virtual void Awake()
@@ -54,7 +54,7 @@ public class Car : MonoBehaviour
 
         if (!Grounded)
         {
-            physics.AddTorque(physics.transform.right * physics.mass / 256, ForceMode.VelocityChange);
+            //physics.AddTorque(physics.transform.right * physics.mass / 256, ForceMode.VelocityChange);
         }
 
         if (CurrentBoost && !CurrentBoost.isActiveAndEnabled)
@@ -274,7 +274,7 @@ public class Car : MonoBehaviour
         completedWaypoints.Clear();
     }
 
-    void SetNextWaypoint(Waypoint waypoint)
+    virtual protected void SetNextWaypoint(Waypoint waypoint)
     {
         nextWaypoint = waypoint;
     }

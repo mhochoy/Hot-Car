@@ -67,7 +67,7 @@ public class CarSetupWizard : ScriptableWizard
     {
         PlayerCar playerCar = CarObject.GetComponent<PlayerCar>();
         Rigidbody rb = null;
-        GameObject cameras = Instantiate((GameObject)Resources.Load("Cameras"));
+        //GameObject cameras = Instantiate((GameObject)Resources.Load("Cameras"));
         GameObject cinemachineCam = Instantiate((GameObject)Resources.Load("CinemachineCamera"));
         CinemachineCamera cinemachineCamProperties = cinemachineCam.GetComponent<CinemachineCamera>();
         CameraTarget target = new CameraTarget();
@@ -79,10 +79,12 @@ public class CarSetupWizard : ScriptableWizard
         CarObject.layer = 6;
         SetCollider();
 
+        /*
         cameras.transform.parent = CarObject.transform;
         cameras.transform.localPosition = new Vector3(0, 0, 0);
         cameras.transform.localRotation = Quaternion.Euler(-90f, 0, -90f);
         cameras.transform.localScale = new Vector3(1f, 1f, 1f);
+        */
 
         cinemachineCam.transform.parent = CarObject.transform;
         target.TrackingTarget = CarObject.transform;

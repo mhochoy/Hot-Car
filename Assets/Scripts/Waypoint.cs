@@ -27,18 +27,17 @@ public class Waypoint : MonoBehaviour
                 {
                     return;
                 }
+                car.gameObject.SendMessage("SetNextWaypoint", next);
             }
 
             car.gameObject.SendMessage("AddCompletedWaypoints", this);
-            car.gameObject.SendMessage("SetNextWaypoint", next);
+            //
 
             if (car is BotCar)
             {
                 BotCar bot = (BotCar)car;
-                if (bot)
-                {
-                    bot.Go(next.transform.position);
-                }
+                
+                bot.SendMessage("SetNextWaypoint", next);
             }
         }
     }

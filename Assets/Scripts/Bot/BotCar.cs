@@ -56,4 +56,10 @@ public class BotCar : Car
         base.Death();
         gameObject.SetActive(false);
     }
+
+    protected override void SetNextWaypoint(Waypoint waypoint)
+    {
+        base.SetNextWaypoint(waypoint);
+        Go(waypoint.transform.position);
+    }
 }

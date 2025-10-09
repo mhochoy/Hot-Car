@@ -202,12 +202,17 @@ public class GameSystem : MonoBehaviour
     void DetermineLeader()
     {
         // Calculate who is in the lead
-
+        int currentAliveAndLeadingBot = 0;
+        if (botCars[currentAliveAndLeadingBot].IsDead)
+        {
+            currentAliveAndLeadingBot++;
+            return;
+        }
         Waypoint playerNextWaypoint = playerCar.GetNextWaypoint();
-        Waypoint leadingBotNextWaypoint = botCars[0].GetNextWaypoint();
-        bool PlayerOverlappingBot = playerCar.GetCurrentLap() > botCars[0].GetCurrentLap();
-        bool BotOverlappingPlayer = playerCar.GetCurrentLap() < botCars[0].GetCurrentLap();
-        bool PlayerAndBotAreOnSameLap = playerCar.GetCurrentLap() == botCars[0].GetCurrentLap();
+        Waypoint leadingBotNextWaypoint = botCars[currentAliveAndLeadingBot].GetNextWaypoint();
+        bool PlayerOverlappingBot = playerCar.GetCurrentLap() > botCars[currentAliveAndLeadingBot].GetCurrentLap();
+        bool BotOverlappingPlayer = playerCar.GetCurrentLap() < botCars[currentAliveAndLeadingBot].GetCurrentLap();
+        bool PlayerAndBotAreOnSameLap = playerCar.GetCurrentLap() == botCars[currentAliveAndLeadingBot].GetCurrentLap();
         bool OneOverlappingAnother = (PlayerOverlappingBot || BotOverlappingPlayer);
 
         if ((playerNextWaypoint && leadingBotNextWaypoint)) // Ensure that these are not null before working with them

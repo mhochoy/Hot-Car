@@ -1,4 +1,3 @@
-using log4net.Util;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -67,10 +66,14 @@ public class CarSetupWizard : ScriptableWizard
     {
         PlayerCar playerCar = CarObject.GetComponent<PlayerCar>();
         Rigidbody rb = null;
-        //GameObject cameras = Instantiate((GameObject)Resources.Load("Cameras"));
+        GameObject cameras = Instantiate((GameObject)Resources.Load("Cameras"));
         GameObject cinemachineCam = Instantiate((GameObject)Resources.Load("CinemachineCamera"));
         CinemachineCamera cinemachineCamProperties = cinemachineCam.GetComponent<CinemachineCamera>();
         CameraTarget target = new CameraTarget();
+
+        cinemachineCam.transform.parent = CarObject.transform;
+        target.TrackingTarget = CarObject.transform;
+        cinemachineCamProperties.Target = target;
 
         CarObject.name = Name;
         CarObject.AddComponent<Movement>();
@@ -79,18 +82,14 @@ public class CarSetupWizard : ScriptableWizard
         CarObject.layer = 6;
         SetCollider();
 
-        /*
+        
         cameras.transform.parent = CarObject.transform;
         cameras.transform.localPosition = new Vector3(0, 0, 0);
         cameras.transform.localRotation = Quaternion.Euler(-90f, 0, -90f);
         cameras.transform.localScale = new Vector3(1f, 1f, 1f);
-        */
+        
 
-        cinemachineCam.transform.parent = CarObject.transform;
-        target.TrackingTarget = CarObject.transform;
-        cinemachineCamProperties.Target = target;
-
-        // Link essential components (need to be assigned before the game is run
+        // --- Link essential components (need to be assigned before the game is run)
         if (playerCar == null)
         {
             playerCar = CarObject.AddComponent<PlayerCar>();
@@ -105,6 +104,8 @@ public class CarSetupWizard : ScriptableWizard
             rb = CarObject.AddComponent<Rigidbody>();
             playerCar.physics = rb;
         }
+
+        // ---
 
         ConfigureCar(playerCar, rb);
     }
@@ -136,7 +137,7 @@ public class CarSetupWizard : ScriptableWizard
 
     void SetCollider()
     {
-        foreach (GameObject t in CarObject.transform)
+        foreach (UnityEngine.Transform t in CarObject.transform)
         {
             MeshRenderer meshRend = t.GetComponent<MeshRenderer>();
 

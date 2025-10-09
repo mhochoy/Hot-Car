@@ -21,6 +21,9 @@ public class Car : MonoBehaviour
     public CarSounds carSounds;
     public Rigidbody physics;
 
+    [Header("Extras")]
+    [SerializeField] ImpactDetection frontImpactDetection;
+
     
     protected Vector3 currentVelocity; // Really meant for use with the BotCar
     int CurrentLap = 1;
@@ -52,9 +55,14 @@ public class Car : MonoBehaviour
 
         physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + (physics.centerOfMass * (physics.mass / 16));
 
+        if ((frontImpactDetection && frontImpactDetection.IncomingCollision) && transform.rotation.eulerAngles.x >= 40) 
+        {
+            physics.AddTorque(-physics.transform.right * physics.mass / 128, ForceMode.VelocityChange);
+        }
+
         if (!Grounded)
         {
-            //physics.AddTorque(physics.transform.right * physics.mass / 256, ForceMode.VelocityChange);
+            //
         }
 
         if (CurrentBoost && !CurrentBoost.isActiveAndEnabled)

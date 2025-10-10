@@ -143,7 +143,6 @@ public class Car : MonoBehaviour
             Grounded = false;
             if (Physics.Raycast(transform.localPosition, -transform.up, Mathf.Infinity, 7 | 0) && !Grounded)
             {
-                Debug.Log("Spawn that landing effect!!!");
                 spawnEffectOnLand = true;
             }
             else

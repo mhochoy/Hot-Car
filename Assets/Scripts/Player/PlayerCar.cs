@@ -134,7 +134,6 @@ public class PlayerCar : Car
 
         else if (!botCar && !otherHealth && !collision.gameObject.CompareTag("Prop"))
         {
-            Debug.Log("Damage the car");
             //health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 4);
         }
 

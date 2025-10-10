@@ -21,20 +21,19 @@ public class Waypoint : MonoBehaviour
         {
             if (car is PlayerCar)
             {
-                Debug.Log($"Player has completed {car.GetCompletedWaypoints() + 1} checkpoints");
-                Debug.Log($"Player needs {GameSystem.instance.GetMaxCheckpoints()} to get to next lap");
-                if (gameObject.name == "LapTrigger")
+                if (gameObject.name != "LapTrigger")
                 {
-                    return;
+                    car.gameObject.SendMessage("AddCompletedWaypoints", this);
                 }
                 car.gameObject.SendMessage("SetNextWaypoint", next);
             }
 
-            car.gameObject.SendMessage("AddCompletedWaypoints", this);
-            //
-
             if (car is BotCar)
             {
+                if (gameObject.name != "LapTrigger")
+                {
+                    car.gameObject.SendMessage("AddCompletedWaypoints", this);
+                }
                 BotCar bot = (BotCar)car;
                 
                 bot.SendMessage("SetNextWaypoint", next);

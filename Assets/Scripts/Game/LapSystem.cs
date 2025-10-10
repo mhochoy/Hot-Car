@@ -19,10 +19,15 @@ public class LapSystem : MonoBehaviour
 
             if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.GetMaxCheckpoints())
             {
-                other.SendMessage("NextLap");
-                other.SendMessage("ClearCompletedWaypoints");
+                if (car is BotCar)
+                {
+                    car.SendMessage("ClearCompletedWaypoints");
+                    car.SendMessage("NextLap");
+                }                
                 if (car is PlayerCar)
                 {
+                    car.SendMessage("ClearCompletedWaypoints");
+                    car.SendMessage("NextLap");
                     GameSystem.instance.SendMessage("TickLapNoise");
                 }
             }

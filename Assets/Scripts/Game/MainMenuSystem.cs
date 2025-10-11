@@ -32,7 +32,7 @@ public class MainMenuSystem : MonoBehaviour
 
     void LoadChosenScene()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("RaceConfigurator");
     }
 
     public void Quit()

@@ -133,7 +133,7 @@ public class PlayerCar : Car
             {
                 botCar.health.Damage((Damage - botCar.Damage) * 2.5f * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
             }
-            cameraImpulseSource.GenerateImpulse(new Vector3(0, -.25f));
+            cameraImpulseSource.GenerateImpulse(new Vector3(.25f, -.25f));
         }
         else if (!botCar && otherHealth)
         {

@@ -1,6 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.ProBuilder.MeshOperations;
+using Unity.Cinemachine;
 
 [RequireComponent(typeof(AudioSource))]
 public class Car : MonoBehaviour
@@ -33,7 +35,7 @@ public class Car : MonoBehaviour
     float originalVolume;
     List<Waypoint> completedWaypoints = new List<Waypoint>();
     protected Waypoint nextWaypoint;
-    bool spawnEffectOnLand = false;
+    bool spawnEffectOnLand = false;    
 
     protected virtual void Awake()
     {
@@ -48,6 +50,7 @@ public class Car : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+
         RaycastHit info;
 
         IsDead = health.value <= 0;
@@ -55,7 +58,7 @@ public class Car : MonoBehaviour
 
         physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + (physics.centerOfMass * (physics.mass / 16));
 
-        if ((frontImpactDetection && frontImpactDetection.IncomingCollision) && transform.rotation.eulerAngles.x >= 40) 
+        if ((frontImpactDetection && frontImpactDetection.IncomingCollision) && transform.localRotation.eulerAngles.x >= 40f) 
         {
             physics.AddTorque(-physics.transform.right * physics.mass / 128, ForceMode.VelocityChange);
         }
@@ -63,6 +66,13 @@ public class Car : MonoBehaviour
         if (!Grounded)
         {
             //
+        }
+        else
+        {
+            if (transform.localRotation.eulerAngles.z > 137f && transform.localRotation.eulerAngles.z < 260f)
+            {
+                Death();
+            }
         }
 
         if (CurrentBoost && !CurrentBoost.isActiveAndEnabled)
@@ -144,12 +154,18 @@ public class Car : MonoBehaviour
             if (Physics.Raycast(transform.localPosition, -transform.up, Mathf.Infinity, 7 | 0) && !Grounded)
             {
                 spawnEffectOnLand = true;
+                OnLanding();
             }
             else
             {
                 spawnEffectOnLand = false;
             }
         }
+    }
+
+    protected virtual void OnLanding()
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using System;
 using System.Linq;
+using Unity.Cinemachine;
 
 public class PlayerCar : Car
 {
@@ -16,7 +17,7 @@ public class PlayerCar : Car
     int currentCamIndex = 1;
     GameObject currentCam;
     List<GameObject> cameras = new List<GameObject>();
-
+    CinemachineImpulseSource cameraImpulseSource;
 
     protected override void Awake()
     {
@@ -29,11 +30,13 @@ public class PlayerCar : Car
         controls = GetComponentInParent<Controls>();
 
         cameras = GameObject.FindGameObjectsWithTag("MainCamera").ToList();
+        cameraImpulseSource = GetComponentInChildren<CinemachineImpulseSource>();
 
         if (cameras.Count > currentCamIndex)
         {
             currentCam = cameras[currentCamIndex];
         }
+        
     }
 
     protected override void FixedUpdate()
@@ -107,6 +110,16 @@ public class PlayerCar : Car
         gameObject.SetActive(false);
     }
 
+    protected override void OnLanding()
+    {
+        cameraImpulseSource.GenerateImpulse(new Vector3(0, -.175f));
+    }
+
+    void GenerateImpulse(Vector3 impulse)
+    {
+        
+    }
+
     protected override void OnCollisionEnter(Collision collision)
     {
         BotCar botCar = collision.gameObject.GetComponent<BotCar>();
@@ -120,6 +133,7 @@ public class PlayerCar : Car
             {
                 botCar.health.Damage((Damage - botCar.Damage) * 2.5f * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
             }
+            cameraImpulseSource.GenerateImpulse(new Vector3(0, -.25f));
         }
         else if (!botCar && otherHealth)
         {
@@ -129,6 +143,7 @@ public class PlayerCar : Car
         else if (collision.gameObject.layer == 7 || collision.gameObject.layer == 0 && Grounded)
         {
             GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
+            cameraImpulseSource.GenerateImpulse(new Vector3(0, -.25f));
             //health.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f) / 8);
         }
 

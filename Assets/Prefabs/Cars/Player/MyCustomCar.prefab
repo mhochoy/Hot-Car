@@ -4669,6 +4669,7 @@ GameObject:
   - component: {fileID: 8263259787133204256}
   - component: {fileID: 7006348337240474474}
   - component: {fileID: 1193548601991234084}
+  - component: {fileID: -319503866358164341}
   m_Layer: 6
   m_Name: MyCustomCar
   m_TagString: Player
@@ -4915,6 +4916,36 @@ MonoBehaviour:
   currentLinearVelocity: {x: 0, y: 0, z: 0}
   currentAngularVelocity: {x: 0, y: 0, z: 0}
   turningInfluence: 0
+--- !u!114 &-319503866358164341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651253381553845906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1656862015974357616
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,13 +1,30 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Controls : MonoBehaviour
 {
+    public InputSystemActions inputActions;
     public bool accelerate { get; private set; }
     public bool deaccelerate { get; private set; }
     public float turn { get; private set; }
     public bool brake { get; private set; }
     public bool switchCam { get; private set; }
     public bool Lock;
+
+    private void Awake()
+    {
+        inputActions = new InputSystemActions();
+    }
+
+    private void OnEnable()
+    {
+        inputActions.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Player.Disable();
+    }
 
     void Update()
     {
@@ -19,10 +36,10 @@ public class Controls : MonoBehaviour
             turn = 0.00f;
             return;
         }
-        accelerate = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-        deaccelerate = Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow);
-        brake = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
-        switchCam = Input.GetKeyDown(KeyCode.E);
-        turn = Input.GetAxis("Horizontal");
+        accelerate = inputActions.Player.Accelerate.ReadValue<float>() > 0 ? true : false;
+        //deaccelerate = Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow);
+        brake = inputActions.Player.Reverse.ReadValue<float>() > 0 ? true : false;
+        switchCam = inputActions.Player.Switch.ReadValue<float>() > 0 ? true : false;
+        turn = -inputActions.Player.Turn.ReadValue<float>();
     }
 }

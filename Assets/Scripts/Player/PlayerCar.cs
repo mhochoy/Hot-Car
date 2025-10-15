@@ -57,11 +57,6 @@ public class PlayerCar : Car
             //base.PlayInterruptingLoopSound(carSounds.AccelerationLoop);
             movement.Accelerate(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);
         }
-        if (controls.deaccelerate)
-        {
-            //base.PlayInterruptingSound(carSounds.Deacceleration);
-        }
-
         if (controls.brake)
         {
             movement.Reverse(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);

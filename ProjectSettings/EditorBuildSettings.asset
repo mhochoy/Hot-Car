@@ -21,5 +21,6 @@ EditorBuildSettings:
     path: Assets/Scenes/TerrainTestMap.unity
     guid: e66985c51305f334f9b26a7850c952e2
   m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 184ba09d128420c4fb3572d2884269f3, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   m_UseUCBPForAssetBundles: 0

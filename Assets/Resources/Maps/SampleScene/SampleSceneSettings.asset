@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4696bef4dc003634bb904ddfdfd0a31f, type: 3}
+  m_Name: SampleSceneSettings
+  m_EditorClassIdentifier: 
+  mapName: SampleScene
+  PlayerSpawnTransform: {fileID: 8079387350947809566, guid: 591b1faf2b536c342afcb9768064a634, type: 3}
+  BotSpawnTransforms: []
+  WaitingTransform: {x: 0, y: 0, z: 0}
+  TotalRacers: 5
+  Traps: 1
+  Environment: {fileID: 5755749433483291664, guid: 2f5ed2a306ba21a469a59aba00702c21, type: 3}

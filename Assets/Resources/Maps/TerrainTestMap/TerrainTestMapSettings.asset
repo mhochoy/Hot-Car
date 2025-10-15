@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8018506e17f208749b96ae18e94acbfe, type: 3}
+  m_Name: TerrainTestMapSettings
+  m_EditorClassIdentifier: 
+  mapName: TerrainTestMap
+  PlayerSpawnTransform: {fileID: 4430854636874007843, guid: 4d4d2b36d3b1d12419148aa4727a6680, type: 3}
+  BotSpawnTransforms:
+  - {fileID: 8397523693621241736, guid: eb09744ab54a55746afffc55b2464387, type: 3}
+  - {fileID: 1333470294204101730, guid: bf639ac02003daa458c27269d7e26d30, type: 3}
+  - {fileID: 4608923517524517983, guid: 773cebc37914ebc42b2fe6769d5007db, type: 3}
+  - {fileID: 7303635761330702774, guid: a8cefbb6473199541898c8580d6e3be6, type: 3}
+  Waypoints:
+  - {fileID: 4748675214561994241, guid: 4873e6167528bb04e919974b2501bd85, type: 3}
+  - {fileID: 5137223524287513813, guid: 898308f99b7e9e64199c9cd02f428bad, type: 3}
+  - {fileID: 4867544064351954785, guid: 6cc76ff9f5e361344a6d887c3445d592, type: 3}
+  - {fileID: 5881987959568533039, guid: c87d9c1a52c76f2489755a111f6b62f6, type: 3}
+  - {fileID: 2831540546942756463, guid: 10eb71bcc9519124498c59114f91890b, type: 3}
+  - {fileID: 2140773219403747598, guid: 73c9f293f4c032d489b00119c1c68494, type: 3}
+  - {fileID: 8818641195851527643, guid: 807e7046e03ab914e9c468daf86b9208, type: 3}
+  - {fileID: 6913236609721490353, guid: 158d5701487ef1d458ef98c9dc90d56c, type: 3}
+  FinishLine: {fileID: 7726477174408820489, guid: 99c794dde1f6f3e4bb8e7b432ae64627, type: 3}
+  WaitingTransform: {x: -211.68729, y: -65.128174, z: 196.2639}
+  TotalRacers: 4
+  Traps: 1
+  Environment: {fileID: 1406142156202005461, guid: 440da4090bd392749aba2e702b745d92, type: 3}

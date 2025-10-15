@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,9 @@ public class GameSystem : MonoBehaviour
     [Header("Components")]
     [ReadOnly(true)]
     public static GameSystem instance;
+    public RacePreferences racePreferences;
+    public MapSettings mapSettings;
+    
 
     [Header("Race Properties")]
     public bool IsGameOver { get; private set; }
@@ -29,6 +33,8 @@ public class GameSystem : MonoBehaviour
     public float TotalTime;
 
     // Private
+    [SerializeField] BotRacers botRacers;
+    [SerializeField] List<Transform> botSpawnPoints = new List<Transform>();
     int MaxCheckpointLevels;
     Car Winner;
     GameUI gameUI;
@@ -47,6 +53,8 @@ public class GameSystem : MonoBehaviour
             instance = this;
         }
 
+        
+
         gameUI = GetComponent<GameUI>();
         originalTimeScale = Time.timeScale;
         state = GameState.InProgress;
@@ -59,7 +67,20 @@ public class GameSystem : MonoBehaviour
         MaxCheckpointLevels = allWaypoints.Count;
         AnyCheckpoints = MaxCheckpointLevels > 0;
 
+        SpawnCars();
         GatherBots();
+    }
+
+    void SpawnCars()
+    {
+        GameObject player = Instantiate(racePreferences.PlayerCar, mapSettings.PlayerSpawnTransform.position, mapSettings.PlayerSpawnTransform.rotation);
+        for (int i = 0; i <= racePreferences.TotalRacers - 1; i++) // We subtract one because the player has already been spawned
+        {
+            int index = UnityEngine.Random.Range(0, botRacers.Bots.Count);
+            GameObject bot = Instantiate(botRacers.Bots[index], botSpawnPoints[i].localPosition, botSpawnPoints[i].localRotation);
+
+            bot.GetComponentInChildren<BotCar>().FirstWaypoint = allWaypoints[allWaypoints.Count - 1];
+        }
     }
 
     public int GetMaxCheckpoints()

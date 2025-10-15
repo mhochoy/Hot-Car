@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 2654544494453688963}
   m_Layer: 0
   m_Name: Game
-  m_TagString: Untagged
+  m_TagString: Game
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -804,10 +804,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8156b26de2113c54891710cecf8155b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  racePreferences: {fileID: 11400000, guid: 0cc6d386d9c74f747b8ba18c9fb4e959, type: 2}
+  mapSettings: {fileID: 11400000, guid: b0c89852d25a45148bf9e5116b6ba21f, type: 2}
   Leader: {fileID: 0}
   Laps: 5
   TotalTime: 0
-  GravityMultiplier: 1
+  botRacers: {fileID: 11400000, guid: e9c29139d14681f46b6500a36a61e147, type: 2}
 --- !u!114 &1770516075901033088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,6 +851,7 @@ MonoBehaviour:
   ExplosionEffect: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
   SmokeStreamEffect: {fileID: 1273915125232972, guid: 73767e07adddc394d82b994801f89bbb, type: 3}
   ImpactEffect: {fileID: 2695941719300977822, guid: d0467414c35f2b349a4bb1219e454466, type: 3}
+  LandingEffect: {fileID: 0}
 --- !u!82 &1035595803473520653
 AudioSource:
   m_ObjectHideFlags: 0

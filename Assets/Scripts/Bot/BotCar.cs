@@ -25,12 +25,16 @@ public class BotCar : Car
     protected override void Awake()
     {
         base.Awake();
-        agent.destination = FirstWaypoint.transform.position;
         agent.speed = base.Speed;
         agent.acceleration = Acceleration * 10;
         agent.angularSpeed = base.TurnSpeed * 100;
         agent.radius = ObstacleAvoidanceRadius;
         agent.stoppingDistance = 0.81f;
+    }
+
+    private void Start()
+    {
+        agent.destination = FirstWaypoint.transform.position;
     }
 
     // Update is called once per frame

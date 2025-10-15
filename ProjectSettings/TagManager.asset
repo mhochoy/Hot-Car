@@ -12,6 +12,7 @@ TagManager:
   - Boost/Health
   - Boost/Speed
   - Cams
+  - Game
   layers:
   - Default
   - TransparentFX

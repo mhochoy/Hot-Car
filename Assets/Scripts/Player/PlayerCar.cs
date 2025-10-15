@@ -43,6 +43,7 @@ public class PlayerCar : Car
     {
         Damage = movement.DamagePotential + ((Math.Round(movement.currentLinearVelocity.z) != 0f ? physics.mass / 64f : 0f));
         base.FixedUpdate();
+        // Handle Car Input
         if (controls.Lock || Grounded == false)
         {
             return;
@@ -65,12 +66,11 @@ public class PlayerCar : Car
         {
             movement.Reverse(controls.turn, (CurrentBoost && CurrentBoost is SpeedBoost) ? base.CurrentBoost.value * Speed : Speed, TurnSpeed);
         }
-
-        
     }
 
     void Update()
     {
+        // Handle Camera Input
         if (!currentCam.activeSelf)
         {
             currentCam.SetActive(true);
@@ -131,13 +131,19 @@ public class PlayerCar : Car
             if (Damage > botCar.Damage && !controls.Lock) // Locked controls would indicate that the game isn't in its normal playable state (i.e.
                                                           // the game is over or the countdown is still active
             {
-                botCar.health.Damage((Damage - botCar.Damage) * 2.5f * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
+                if (GameSystem.instance.racePreferences.DealDamage)
+                {
+                    botCar.health.Damage((Damage - botCar.Damage) * 2.5f * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
+                }
             }
             cameraImpulseSource.GenerateImpulse(new Vector3(.25f, -.25f));
         }
         else if (!botCar && otherHealth)
         {
-            otherHealth.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
+            if (GameSystem.instance.racePreferences.DealDamage)
+            {
+                otherHealth.Damage(Damage * ((CurrentBoost && CurrentBoost is DamageBoost) ? CurrentBoost.value : 1f));
+            }
         }
 
         else if (collision.gameObject.layer == 7 || collision.gameObject.layer == 0 && Grounded)

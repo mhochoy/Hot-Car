@@ -103,12 +103,22 @@ public class Car : MonoBehaviour
 
         if (otherCar && Damage > otherCar.Damage && otherCar != this)
         {
-            otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f); // This is the collision with another car
+            // This is the collision with another car
+            if (GameSystem.instance.racePreferences.DealDamage)
+            {
+                otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f);
+            }
+            
             GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
         }
         else if (!otherCar && otherHealth)
         {
-            otherHealth.Damage(Damage); // This is the collision with a prop or some other GameObject with a health script
+            // This is the collision with a prop or some other GameObject with a health script
+            if (GameSystem.instance.racePreferences.DealDamage)
+            {
+                otherHealth.Damage(Damage);
+            }
+            
             GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
         }
 
@@ -121,7 +131,11 @@ public class Car : MonoBehaviour
             }
             else
             {
-                health.Damage(Damage / 4);
+                if (GameSystem.instance.racePreferences.DealDamage)
+                {
+                    health.Damage(Damage / 4);
+                }
+                
                 GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
             }
         }

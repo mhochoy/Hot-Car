@@ -39,7 +39,7 @@ public class MapPickerSystem : MonoBehaviour
         {
             foreach (GameObject env in spawnedEnvironments)
             {
-                if (env.name != selectedMapEnvironment.name + "(Clone)")
+                if (env.name != selectedMapEnvironment.name + "(Clone)") // Makes sure unselected map environments are not active
                 {
                     env.SetActive(false);
                 }
@@ -87,12 +87,12 @@ public class MapPickerSystem : MonoBehaviour
 
     public void SetEnvironment()
     {
-        if (!spawnedEnvironments.Exists(env => env.name == selectedMapEnvironment.name + "(Clone)"))
+        if (!spawnedEnvironments.Exists(env => env.name == selectedMapEnvironment.name + "(Clone)")) // if the environment hasn't already been spawned...
         {
             environment = Instantiate(selectedMapEnvironment);
             spawnedEnvironments.Add(environment);
         }
-        else
+        else // ...otherwise make sure it is enabled
         {
             GameObject background = spawnedEnvironments.Find((env) => env.name == selectedMapEnvironment.name + "(Clone)");
             background.SetActive(true);

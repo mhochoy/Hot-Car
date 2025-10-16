@@ -3,5 +3,5 @@
 
 <b>Platforms: </b>This game currently has a scope of Windows only.
 
-<b>Production Stage: </b>Pre-Alpha.
+<b>Production Stage: </b>Beta
 

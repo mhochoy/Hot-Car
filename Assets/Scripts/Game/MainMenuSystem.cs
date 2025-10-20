@@ -13,11 +13,6 @@ public class MainMenuSystem : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void Update()
-    {
-
-    }
-
     IEnumerator<WaitForSeconds> WaitThenPlay(float time)
     {
         yield return new WaitForSeconds(time);

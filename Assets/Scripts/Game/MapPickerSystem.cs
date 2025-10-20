@@ -37,34 +37,30 @@ public class MapPickerSystem : MonoBehaviour
         
         if (spawnedEnvironments.Count > 0)
         {
-            foreach (GameObject env in spawnedEnvironments)
-            {
-                if (env.name != selectedMapEnvironment.name + "(Clone)") // Makes sure unselected map environments are not active
-                {
-                    env.SetActive(false);
-                }
-                else
-                {
-                    if (env.activeSelf == false)
-                    {
-                        env.SetActive(true);
-                    }
-                    environment = env;
-                }
-            }
+            HandleActiveEnvironment();
         }
 
         if (environment)
         {
-            if (Car.transform.parent != environment.transform)
+            SyncCarTransform();
+        }
+    }
+
+    void HandleActiveEnvironment()
+    {
+        foreach (GameObject env in spawnedEnvironments)
+        {
+            if (env.name != selectedMapEnvironment.name + "(Clone)") // Makes sure unselected map environments are not active
             {
-                Car.transform.parent = environment.transform;
+                env.SetActive(false);
             }
             else
             {
-                WaitingPoint waitingPoint = environment.GetComponentInChildren<WaitingPoint>();
-                Car.transform.position = waitingPoint.transform.position;
-                Car.transform.rotation = waitingPoint.transform.rotation;
+                if (env.activeSelf == false)
+                {
+                    env.SetActive(true);
+                }
+                environment = env;
             }
         }
     }
@@ -82,6 +78,20 @@ public class MapPickerSystem : MonoBehaviour
         {
             totalRacersSlider.maxValue = selectedMapSettings.TotalRacers;
             totalRacersText.text = "Total Racers: " + totalRacersSlider.value;
+        }
+    }
+
+    void SyncCarTransform()
+    {
+        if (Car.transform.parent != environment.transform)
+        {
+            Car.transform.parent = environment.transform;
+        }
+        else
+        {
+            WaitingPoint waitingPoint = environment.GetComponentInChildren<WaitingPoint>();
+            Car.transform.position = waitingPoint.transform.position;
+            Car.transform.rotation = waitingPoint.transform.rotation;
         }
     }
 

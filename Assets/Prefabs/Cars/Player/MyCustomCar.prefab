@@ -4817,7 +4817,7 @@ MonoBehaviour:
   Grounded: 0
   Damage: 0
   Speed: 68
-  TurnSpeed: 0.24
+  TurnSpeed: 0.08
   CurrentBoost: {fileID: 0}
   health: {fileID: 2499626913089268640}
   movement: {fileID: 1193548601991234084}

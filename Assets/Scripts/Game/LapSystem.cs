@@ -17,19 +17,24 @@ public class LapSystem : MonoBehaviour
                 car = other.GetComponentInParent<Car>();
             }
 
-            if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.GetMaxCheckpoints())
+            HandleWaypoint(car);
+        }
+    }
+
+    void HandleWaypoint(Car car)
+    {
+        if (car.GetCompletedWaypoints() + 1 == GameSystem.instance.GetMaxCheckpoints())
+        {
+            if (car is BotCar)
             {
-                if (car is BotCar)
-                {
-                    car.SendMessage("ClearCompletedWaypoints");
-                    car.SendMessage("NextLap");
-                }                
-                if (car is PlayerCar)
-                {
-                    car.SendMessage("ClearCompletedWaypoints");
-                    car.SendMessage("NextLap");
-                    GameSystem.instance.SendMessage("TickLapNoise");
-                }
+                car.SendMessage("ClearCompletedWaypoints");
+                car.SendMessage("NextLap");
+            }
+            if (car is PlayerCar)
+            {
+                car.SendMessage("ClearCompletedWaypoints");
+                car.SendMessage("NextLap");
+                GameSystem.instance.SendMessage("TickLapNoise");
             }
         }
     }

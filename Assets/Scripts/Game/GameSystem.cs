@@ -17,13 +17,13 @@ public class GameSystem : MonoBehaviour
         Countdown
     }
     GameState state;
+
     [Header("Components")]
     [ReadOnly(true)]
     public static GameSystem instance;
     public RacePreferences racePreferences;
     public MapSettings mapSettings;
     
-
     [Header("Race Properties")]
     public bool IsGameOver { get; private set; }
     public Car Leader;
@@ -36,7 +36,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField] BotRacers botRacers;
     [SerializeField] List<Transform> botSpawnPoints = new List<Transform>();
     int MaxCheckpointLevels;
-    Car Winner;
+    Car Winner = null;
     GameUI gameUI;
     float originalTimeScale;
     PlayerCar playerCar;
@@ -48,16 +48,26 @@ public class GameSystem : MonoBehaviour
 
     void Awake()
     {
+        Setup();
+        SpawnCars();
+        GatherBots();
+    }
+
+    void Setup()
+    {
         if (instance == null)
         {
             instance = this;
         }
-
         
-
         gameUI = GetComponent<GameUI>();
         originalTimeScale = Time.timeScale;
         state = GameState.InProgress;
+        SetupWaypoints();
+    }
+
+    void SetupWaypoints()
+    {
         foreach (var waypoint in GameObject.FindGameObjectsWithTag("Waypoint"))
         {
             allWaypoints.Add(waypoint.GetComponent<Waypoint>());
@@ -66,9 +76,6 @@ public class GameSystem : MonoBehaviour
         allWaypoints = allWaypoints.OrderByDescending((waypoint) => waypoint.level).ToList();
         MaxCheckpointLevels = allWaypoints.Count;
         AnyCheckpoints = MaxCheckpointLevels > 0;
-
-        SpawnCars();
-        GatherBots();
     }
 
     void SpawnCars()
@@ -88,62 +95,70 @@ public class GameSystem : MonoBehaviour
         return MaxCheckpointLevels;
     }
 
+    private void Update()
+    {
+        if (playerCar.controls.Paused)
+        {
+            Time.timeScale = 0.00f;
+        }
+        else
+        {
+            Time.timeScale = originalTimeScale;
+        }
+    }
+
     void FixedUpdate()
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
+        
 
-        if (!AnyCheckpoints)
+        
+
+        if (!AnyCheckpoints) // Free Roam 
         {
             HandleUI();
+            HandleCountdownLock();
             HandleGameExtras();
             return;
             // Free Roam
         }
-
-        IsGameOver = (state == GameState.Completed);
-        botCars = botCars.OrderByDescending((car) => car.GetCurrentLap()).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.GetDistanceFromNextWaypoint()).ToList();
-        aliveBots = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == false).ToList();
-        bool AllBotsAreDead = botCars.All((cars) => cars.isActiveAndEnabled == false);
-        bool OneBotIsLeft = (aliveBots.Count <= 1);
-        bool PlayerBeatTheFinalLapBeforeTheClosestBot = ((playerCar && playerCar.GetCurrentLap() > Laps) && (botCars[0] && botCars[0].GetCurrentLap() <= Laps));
-        bool BotBeatTheFinalLapBeforeThePlayer = ((playerCar && playerCar.GetCurrentLap() <= Laps) && (botCars[0] && botCars[0].GetCurrentLap() > Laps));
-        bool DidPlayerWin = PlayerBeatTheFinalLapBeforeTheClosestBot || AllBotsAreDead;
-        bool DidBotWin = (BotBeatTheFinalLapBeforeThePlayer || (playerCar.IsDead && OneBotIsLeft));
-        bool done = false;
-
-        HandleCountdownLock();
-
-        if ((DidPlayerWin || DidBotWin) && !done)
+        else // Race or Demolition
         {
-            if (DidBotWin) // We don't want this to run every frame as it is a relatively expensive operation
-            {
-                Car car = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.GetCurrentLap() > Laps);
-                if (!car)
-                {
-                    // The player and other bots have died, so find the surviving bot and call them a winner
-                    Winner = aliveBots[0];
-                }
-                else if (car)
-                {
-                    Winner = car;
-                }
-            }
-            else if (DidPlayerWin)
-            {
-                Winner = playerCar;
-            }
-            playerCar.controls.Lock = true;
-            EndGame();
+            IsGameOver = (state == GameState.Completed);
+            botCars = botCars.OrderByDescending((car) => car.GetCurrentLap()).ThenByDescending((car) => car.GetNextWaypoint()?.level).ThenBy((car) => car.GetDistanceFromNextWaypoint()).ToList();
+            aliveBots = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == false).ToList();
+            bool AllBotsAreDead = botCars.All((cars) => cars.isActiveAndEnabled == false);
+            bool OneBotIsLeft = (aliveBots.Count >= 1);
+            bool PlayerBeatTheFinalLapBeforeTheClosestBot = ((playerCar && playerCar.GetCurrentLap() > Laps) && (botCars[0] && botCars[0].GetCurrentLap() <= Laps));
+            bool BotBeatTheFinalLapBeforeThePlayer = ((playerCar && playerCar.GetCurrentLap() <= Laps) && (botCars[0] && botCars[0].GetCurrentLap() > Laps));
+            bool DidPlayerWin = PlayerBeatTheFinalLapBeforeTheClosestBot || AllBotsAreDead;
+            bool DidBotWin = (BotBeatTheFinalLapBeforeThePlayer || (playerCar.IsDead && OneBotIsLeft));
+            bool done = false;
 
-            done = true; // We do this so we only run this 'if' once
-        }
-        else if (!DidPlayerWin && !DidBotWin)
-        {
-            DetermineLeader();
-        }
+            if ((DidPlayerWin || DidBotWin) && !done)
+            {
+                if (DidBotWin) // We don't want this to run every frame as it is a relatively expensive operation
+                {
+                    FindWinningBot();
+                }
+                else if (DidPlayerWin)
+                {
+                    Winner = playerCar;
+                }
+                playerCar.controls.Lock = true;
+                EndGame();
 
-        HandleUI();
-        HandleGameExtras();
+                done = true; // We do this so we only run this 'if' once
+            }
+            else if (!DidPlayerWin && !DidBotWin)
+            {
+                DetermineLeader();
+            }
+
+            HandleUI();
+            HandleCountdownLock();
+            HandleGameExtras();
+        }
     }
 
     void HandleCountdownLock()
@@ -198,6 +213,20 @@ public class GameSystem : MonoBehaviour
         gameUI.SetLapText($"Lap: {playerCar.GetCurrentLap()}/{Laps}");
         gameUI.SetLeaderText($"{(Leader ? Leader.name : "Nobody")} is leading!");
         gameUI.SetCourseInformationText(botCars.FindAll((car) => !car.IsDead).Count + (!playerCar.IsDead ? 1 : 0), botCars.Count + 1);
+    }
+
+    void FindWinningBot()
+    {
+        Car car = Array.Find<BotCar>(botCars.ToArray(), (bot) => bot.GetCurrentLap() > Laps);
+        if (!car && Winner == null)
+        {
+            // The player and other bots have died, so find the surviving bot and call them a winner
+            Winner = aliveBots[0];
+        }
+        else if (car && Winner == null)
+        {
+            Winner = car;
+        }
     }
 
     void ShowRaceUIElements()

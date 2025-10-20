@@ -56,13 +56,6 @@ public class Car : MonoBehaviour
         IsDead = health.value <= 0;
         DistanceFromNextWaypoint = nextWaypoint ? Vector3.Distance(this.transform.position, nextWaypoint.transform.position) : 0.00f;
 
-        physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + (physics.centerOfMass * (physics.mass / 16));
-
-        if ((frontImpactDetection && frontImpactDetection.IncomingCollision) && transform.localRotation.eulerAngles.x >= 40f) 
-        {
-            physics.AddTorque(-physics.transform.right * physics.mass / 128, ForceMode.VelocityChange);
-        }
-
         if (!Grounded)
         {
             //
@@ -93,6 +86,11 @@ public class Car : MonoBehaviour
             sound.volume = originalVolume / 2;
             PlayInterruptingLoopSound(carSounds.Idle);
         }
+    }
+
+    protected void LateUpdate()
+    {
+        physics.linearVelocity -= ((transform.up) * Time.deltaTime * 7) + (physics.centerOfMass * (physics.mass / 16));
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
@@ -293,6 +291,11 @@ public class Car : MonoBehaviour
         {
             PlayLoopingSound(clip);
         }
+    }
+
+    void Damaged()
+    {
+
     }
 
     // Message Events

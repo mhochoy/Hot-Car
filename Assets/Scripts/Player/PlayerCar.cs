@@ -28,7 +28,11 @@ public class PlayerCar : Car
         base.Awake();
 
         controls = GetComponentInParent<Controls>();
+        SetupCameras();
+    }
 
+    void SetupCameras()
+    {
         cameras = GameObject.FindGameObjectsWithTag("MainCamera").ToList();
         cameraImpulseSource = GetComponentInChildren<CinemachineImpulseSource>();
 
@@ -36,7 +40,6 @@ public class PlayerCar : Car
         {
             currentCam = cameras[currentCamIndex];
         }
-        
     }
 
     protected override void FixedUpdate()

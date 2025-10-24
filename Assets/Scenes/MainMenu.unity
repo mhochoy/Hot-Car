@@ -7184,6 +7184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51c19649d52b2b1438ebb2a2cd3577aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pause: 0
+  Paused: 0
   Lock: 0
 --- !u!23 &8056872578167614707
 MeshRenderer:

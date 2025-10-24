@@ -112,10 +112,6 @@ public class CarSetupWizard : ScriptableWizard
 
     void ConfigureCar(Car car, Rigidbody physics)
     {
-        if (TurnSpeed > 0)
-        {
-            TurnSpeed = TurnSpeed * .10f;
-        }
         car.health.value = Health;
         car.Speed = Speed;
         car.TurnSpeed = TurnSpeed;

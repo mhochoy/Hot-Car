@@ -103,16 +103,21 @@ public class GameSystem : MonoBehaviour
         }
         else
         {
-            Time.timeScale = originalTimeScale;
+            if (state == GameState.InProgress)
+            {
+                Time.timeScale = originalTimeScale;
+            }
+            else
+            {
+                Time.timeScale = .2f;
+                playerCar.controls.Lock = true;
+            }
         }
     }
 
     void FixedUpdate()
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
-        
-
-        
 
         if (!AnyCheckpoints) // Free Roam 
         {
@@ -145,7 +150,7 @@ public class GameSystem : MonoBehaviour
                 {
                     Winner = playerCar;
                 }
-                playerCar.controls.Lock = true;
+                
                 EndGame();
 
                 done = true; // We do this so we only run this 'if' once

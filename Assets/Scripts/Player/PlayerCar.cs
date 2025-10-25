@@ -28,7 +28,29 @@ public class PlayerCar : Car
         base.Awake();
 
         controls = GetComponentInParent<Controls>();
+        
+    }
+
+    private void OnEnable()
+    {
+        EnsureChildrenEnabled();
+        if (physics.isKinematic)
+        {
+            physics.isKinematic = false;
+        }
+        if (movement.enabled == false)
+        {
+            movement.enabled = true;
+        }
         SetupCameras();
+    }
+
+    void EnsureChildrenEnabled()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+        }
     }
 
     void SetupCameras()

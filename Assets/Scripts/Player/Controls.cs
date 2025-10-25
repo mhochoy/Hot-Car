@@ -43,7 +43,7 @@ public class Controls : MonoBehaviour
         accelerate = inputActions.Player.Accelerate.ReadValue<float>() > 0 ? true : false;
         //deaccelerate = Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow);
         brake = inputActions.Player.Reverse.ReadValue<float>() > 0 ? true : false;
-        switchCam = inputActions.Player.Switch.ReadValue<float>() > 0 ? true : false;
+        switchCam = inputActions.Player.Switch.WasPressedThisFrame();
         turn = -inputActions.Player.Turn.ReadValue<float>();
         if (pause)
         {

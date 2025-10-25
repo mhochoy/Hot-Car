@@ -90,6 +90,14 @@ public class GameSystem : MonoBehaviour
         }
     }
 
+    void WakePlayerCar()
+    {
+        if (playerCar && !playerCar.enabled)
+        {
+            playerCar.enabled = true;
+        }
+    }
+
     public int GetMaxCheckpoints()
     {
         return MaxCheckpointLevels;
@@ -118,6 +126,7 @@ public class GameSystem : MonoBehaviour
     void FixedUpdate()
     {
         playerCar = PlayerCar.instance? PlayerCar.instance : null;
+        WakePlayerCar();
 
         if (!AnyCheckpoints) // Free Roam 
         {

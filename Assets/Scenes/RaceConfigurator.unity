@@ -10540,6 +10540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 100
+  DamageTaken: 0
 --- !u!1 &4126790436616614772
 GameObject:
   m_ObjectHideFlags: 0
@@ -10697,6 +10698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 100
+  DamageTaken: 0
 --- !u!1 &4651933929483953848
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class GameSystem : MonoBehaviour
     public static GameSystem instance;
     public RacePreferences racePreferences;
     public MapSettings mapSettings;
+    public GameResults results;
     
     [Header("Race Properties")]
     public bool IsGameOver { get; private set; }
@@ -43,6 +44,7 @@ public class GameSystem : MonoBehaviour
     List<BotCar> botCars = new List<BotCar>();
     List<Waypoint> allWaypoints = new List<Waypoint>();
     bool AnyCheckpoints;
+    int DestroyedCars;
 
     List<BotCar> aliveBots = new List<BotCar>();
 
@@ -147,6 +149,10 @@ public class GameSystem : MonoBehaviour
             bool BotBeatTheFinalLapBeforeThePlayer = ((playerCar && playerCar.GetCurrentLap() <= Laps) && (botCars[0] && botCars[0].GetCurrentLap() > Laps));
             bool DidPlayerWin = PlayerBeatTheFinalLapBeforeTheClosestBot || AllBotsAreDead;
             bool DidBotWin = (BotBeatTheFinalLapBeforeThePlayer || (playerCar.IsDead && OneBotIsLeft));
+
+            List<BotCar> destroyedCars = Array.FindAll(botCars.ToArray(), (car) => car.IsDead == true).ToList();
+            DestroyedCars = destroyedCars.FindAll(car => car.health.GetKiller() == playerCar).Count;
+
             bool done = false;
 
             if ((DidPlayerWin || DidBotWin) && !done)
@@ -363,12 +369,20 @@ public class GameSystem : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         Time.timeScale = originalTimeScale;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("ResultsMenu");
     }
 
     void EndGame()
     {
         state = GameState.Completed;
+        results = (GameResults)Resources.Load("GameResults");
+
+        results.WinnerCar = Winner;
+        results.CarsDestroyed = DestroyedCars;
+        results.DamageTaken = playerCar.health.DamageTaken;
+        results.Time = TotalTime;
+
+        results.Score = (((100f - results.DamageTaken) * results.CarsDestroyed) / results.Time) * 100f;
     }
 
     void TickLapNoise()

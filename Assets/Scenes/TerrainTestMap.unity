@@ -41657,8 +41657,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 82.82
-  m_fontSizeBase: 82.82
+  m_fontSize: 53.26
+  m_fontSizeBase: 53.26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -41869,7 +41869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -23.6, y: -84.55}
+  m_AnchoredPosition: {x: -100.6, y: -58.81}
   m_SizeDelta: {x: 372, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &4551953942158272109
@@ -51628,6 +51628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   racePreferences: {fileID: 11400000, guid: 0cc6d386d9c74f747b8ba18c9fb4e959, type: 2}
   mapSettings: {fileID: 11400000, guid: b0c89852d25a45148bf9e5116b6ba21f, type: 2}
+  results: {fileID: 0}
   Leader: {fileID: 0}
   Laps: 5
   TotalTime: 0

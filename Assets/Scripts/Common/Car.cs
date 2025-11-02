@@ -35,7 +35,8 @@ public class Car : MonoBehaviour
     float originalVolume;
     List<Waypoint> completedWaypoints = new List<Waypoint>();
     protected Waypoint nextWaypoint;
-    bool spawnEffectOnLand = false;    
+    bool spawnEffectOnLand = false;
+    float DamageTaken = 0.00f;
 
     protected virtual void Awake()
     {
@@ -104,7 +105,7 @@ public class Car : MonoBehaviour
             // This is the collision with another car
             if (GameSystem.instance.racePreferences.DealDamage)
             {
-                otherCar.health.Damage((Damage - otherCar.Damage) * 2.5f);
+                otherCar.health.Damage(this, (Damage - otherCar.Damage) * 2.5f);
             }
             
             GameFX.instance.SpawnImpactEffect(collision.GetContact(0).point);
